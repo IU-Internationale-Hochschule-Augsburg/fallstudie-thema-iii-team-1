@@ -1,2 +1,2 @@
-Backend: Flo, Pascal
-UI: Tanja
+Backend: Flo, 
+UI: Tanja, Pascal
