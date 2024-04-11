@@ -1,3 +1,3 @@
 Backend: Flo, Aurelius, Martin
 
-UI: Tanja, Pascal, Tim
+Frontend: Tanja, Pascal, Tim
