@@ -1,3 +1,3 @@
-Backend: Flo, Aurelius, Martin
+Backend: Florian, Aurelius, Martin
 
 Frontend: Tanja, Pascal, Tim
