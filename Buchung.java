@@ -2,7 +2,7 @@ public class Buchung {
 
     // Instanzvariablen
     private int buchungsnummer;
-    public static int buchungszaehler;
+    public static int buchungszaehler = 0;
     private String gastNachname;
     private int anzahlPersonen;
     private int tisch_id;
@@ -12,9 +12,9 @@ public class Buchung {
 
 
     // Konstruktor
-    public Buchung(int buchungsnummer, String gastNachname, int anzahlPersonen, int tisch_id, int mitarbeiter_id, boolean kinderstuhl, String kommentar) {
-        buchungszaehler = buchungszaehler+1;
-        this.buchungsnummer = buchungsnummer;
+    public Buchung(String gastNachname, int anzahlPersonen, int tisch_id, int mitarbeiter_id, boolean kinderstuhl, String kommentar) {
+
+        this.buchungsnummer = ++buchungszaehler;
         this.gastNachname = gastNachname;
         this.anzahlPersonen = anzahlPersonen;
         this.tisch_id = tisch_id;
