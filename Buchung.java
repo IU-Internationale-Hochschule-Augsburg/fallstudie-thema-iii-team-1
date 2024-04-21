@@ -4,6 +4,8 @@ public class Buchung {
     private int buchungsnummer;
     public static int buchungszaehler = 0;
     private String gastNachname;
+    private int wochentag;
+    private int uhrzeit;
     private int anzahlPersonen;
     private int tisch_id;
     private int mitarbeiter_id;
@@ -22,6 +24,9 @@ public class Buchung {
         this.kinderstuhl = kinderstuhl;
         this.kommentar = kommentar;
     }
+
+    public Buchung ()
+    {buchungsnummer = ++buchungszaehler;}
 
 
 
@@ -90,6 +95,19 @@ public class Buchung {
         this.kommentar = kommentar;
     }
 
+    public int getWochentag() {
+        return wochentag;
+    }
 
+    public void setWochentag(int wochentag) {
+        this.wochentag = wochentag;
+    }
 
+    public int getUhrzeit() {
+        return uhrzeit;
+    }
+
+    public void setUhrzeit(int uhrzeit) {
+        this.uhrzeit = uhrzeit;
+    }
 }
