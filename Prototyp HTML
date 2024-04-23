@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservierungssystem</title>
+</head>
+<body>
+    <div class="reservierungen">
+        <h2>Reservierungen</h2>
+        <ul>
+            <?php
+            // Verbindung zur Datenbank herstellen
+            $servername = "sql11.freesqldatabase.com";
+            $username = "sql11700785"; // Dein Datenbank-Benutzername
+            $password = "restaurantteam1backend"; // Dein Datenbank-Passwort
+            $dbname = "sql11700785"; // Dein Datenbankname
+            $port = 3306; // Portnummer
+
+            // Verbindung erstellen
+            $conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+            // Überprüfen, ob die Verbindung erfolgreich war
+            if ($conn->connect_error) {
+                die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
+            }
+
+            // SQL-Befehl zum Abrufen der Reservierungen
+            $sql = "SELECT * FROM reservierungen";
+            $result = $conn->query($sql);
+
+            // Ausgabe der Reservierungen
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo "<li>" . $row["name"] . " - Datum: " . $row["datum"] . ", Zeit: " . $row["zeit"] . ", Tisch: " . $row["Tisch"] . "</li>";
+                }
+            } else {
+                echo "Keine Reservierungen gefunden";
+            }
+
+            // Verbindung schließen
+            $conn->close();
+            ?>
+        </ul>
+    </div>
+</body>
+</html>
+
