@@ -2,8 +2,7 @@
 
 https://www.phpmyadmin.co/index.php
 
-
-Host: sql11.freesqldatabase.com
+Server: sql11.freesqldatabase.com
 
 Database name: sql11700785
 
