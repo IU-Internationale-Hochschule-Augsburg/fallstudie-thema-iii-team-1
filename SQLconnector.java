@@ -1,3 +1,6 @@
+//https://www.youtube.com/watch?v=e8g9eNnFpHQ Java mysql connector runterladen
+
+
 import java.net.ConnectException;
 import java.sql.*;
 
