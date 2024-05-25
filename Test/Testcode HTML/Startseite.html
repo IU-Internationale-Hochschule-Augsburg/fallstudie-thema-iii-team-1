@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Übersichtsseite</title>
+        <link rel="stylesheet" type="text/css" href="Quellen/CSS/StartseiteCSS_Styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- NAVIGATIONSLEISTE -->
+
+        <nav class="header-nav">
+
+            <a href="WD_WDMS_HTML_Index.html">
+                <img src="LogoFrei.png" alt="Grundriss vom Restaurant">
+            </a>
+
+            <ul>
+                <li class="active"><a href="WD_WDMS_HTML_Index.html">Home</a></li>
+                <li ><a href="Calendar.html">Calendar</a></li>
+                <li ><a href="Reservations.html">Reservations</a></li>
+                <li ><a href="Settings.html">Settings</a></li>
+            </ul>
+
+        </nav>
+
+
+        <div class="boxleft">
+            <h2 class="Reservierungsüberschrift">Neue Reservierung:</h2>
+
+            <ul>
+                <?php
+                // Daten aus dem Formular erhalten
+                $name = $_POST['name'];
+                $datum = $_POST['datum'];
+                $zeit = $_POST['zeit'];
+                $tisch = $_POST['Tisch'];
+    
+                // Verbindung zur Datenbank herstellen
+                $servername = "sql11.freesqldatabase.com";
+                $username = "sql11700785"; // Dein Datenbank-Benutzername
+                $password = "restaurantteam1backend"; // Dein Datenbank-Passwort
+                $dbname = "sql11700785"; // Dein Datenbankname
+                $port = 3306; // Portnummer
+    
+                // Verbindung erstellen
+                $conn = new mysqli($servername, $username, $password, $dbname, $port);
+    
+                // Überprüfen, ob die Verbindung erfolgreich war
+                if ($conn->connect_error) {
+                    die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
+                }
+    
+                // SQL-Befehl zum Einfügen der Reservierung in die Datenbank
+                $sql = "INSERT INTO reservierungen (name, datum, zeit, Tisch) VALUES ('$name', '$datum', '$zeit', '$tisch')";
+    
+                if ($conn->query($sql) === TRUE) {
+                    echo "Reservierung erfolgreich gespeichert";
+                } else {
+                    echo "Fehler beim Speichern der Reservierung: " . $conn->error;
+                }
+    
+                // Verbindung schließen
+                $conn->close();
+                ?>
+            </ul>
+
+        </div>
+
+        <!-- HEADER BANNER-->
+
+        <header class="header-banner"></header>
+
+        
+
+
+    </body>
+
+</html>

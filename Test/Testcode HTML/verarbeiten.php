@@ -1,0 +1,37 @@
+<?php
+// Überprüfen, ob das Formular über die POST-Methode gesendet wurde
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Daten aus dem Formular erhalten
+    $name = $_POST['name'];
+    $datum = $_POST['datum'];
+    $zeit = $_POST['zeit'];
+    $tisch = $_POST['tisch'];
+
+    // Verbindung zur Datenbank herstellen
+    $servername = "sql11.freesqldatabase.com";
+    $username = "sql11700785"; // Dein Datenbank-Benutzername
+    $password = "restaurantteam1backend"; // Dein Datenbank-Passwort
+    $dbname = "sql11700785"; // Dein Datenbankname
+    $port = 3306; // Portnummer
+
+    // Verbindung erstellen
+    $conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+    // Überprüfen, ob die Verbindung erfolgreich war
+    if ($conn->connect_error) {
+        die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
+    }
+
+    // SQL-Befehl zum Einfügen der Reservierung in die Datenbank
+    $sql = "INSERT INTO reservierungen (name, datum, zeit, tisch) VALUES ('$name', '$datum', '$zeit', '$tisch')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Reservierung erfolgreich gespeichert";
+    } else {
+        echo "Fehler beim Speichern der Reservierung: " . $conn->error;
+    }
+
+    // Verbindung schließen
+    $conn->close();
+}
+?>
