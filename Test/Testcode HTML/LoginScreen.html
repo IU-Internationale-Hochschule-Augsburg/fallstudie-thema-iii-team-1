@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Restaurant</title>
+    <link rel="stylesheet" href="style_Login.css">
+</head>
+<body>
+
+<div class="login-container">
+    <form action="#" method="post" class="login-form" onsubmit="return checkLogin()">
+        <div class="restaurant-title">
+            <h1>Willkommen beim Restaurant</h1>
+            <img src="https://s.tmimgcdn.com/scr/800x500/266300/restaurant-logo-illustrated-on-a-white-background_266347-original.jpg" alt="Restaurant Logo" class="logo">
+        </div>
+        <div class="form-group">
+            <label for="username">Benutzername:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Anmelden</button>
+    </form>
+</div>
+
+<script>
+    function checkLogin() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        // Einfache Überprüfung von Benutzername und Passwort
+        if (username === "admin" && password === "passwort") {
+            // Weiterleitung zur Startseite, wenn die Anmeldeinformationen korrekt sind
+            window.location.href = "Startseite.html";
+            return false; // Verhindert das Absenden des Formulars
+        } else {
+            alert("Falscher Benutzername oder Passwort. Bitte versuchen Sie es erneut.");
+            return false; // Verhindert das Absenden des Formulars
+        }
+    }
+</script>
+
+</body>
+</html>
+
+

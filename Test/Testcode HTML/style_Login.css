@@ -1,0 +1,69 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa; /* Hintergrundfarbe des Restaurants */
+}
+
+.login-container {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.restaurant-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.restaurant-title h1 {
+    font-size: 24px;
+    color: #333; /* Textfarbe des Titels */
+    margin-bottom: 10px;
+}
+
+.logo {
+    width: 150px; /* Breite des Logos */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px; /* Zentrierung des Logos */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666; /* Textfarbe der Labels */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Berücksichtigt die Breite der Rahmen */
+    text-align: center; /* Zentrierung des Textes */
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Hintergrundfarbe des Anmeldebuttons */
+    color: #fff; /* Textfarbe des Anmeldebuttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Hintergrundfarbe des Anmeldebuttons beim Hover */
+}
