@@ -1,8 +1,12 @@
 <?php
-$name = $_POST['name'];
+
+//Variablen für Daten aus Eingabefeldern
+$gastName = $_POST['name'];
 $datum = $_POST['datum'];
-$zeit = $_POST['zeit'];
-$tisch = $_POST['Tisch'];
+$anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
+$id_Tisch = filter_input(INPUT_POST, 'idTisch', FILTER_VALIDATE_INT);
+$id_Mitarbeiter = filter_input(INPUT_POST, 'idMitarbeiter', FILTER_VALIDATE_INT);
+$kommentar = $_POST['kommentar'];
 
 // Serverdaten
 $servername = "sql11.freesqldatabase.com";
@@ -18,21 +22,18 @@ if ($conn->connect_error) {
     die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
 }
 
-// SQL-Befehl zum Einfügen der Reservierung in die Datenbank
-$sql = "INSERT INTO reservierungen (name, datum, zeit, Tisch) VALUES ('$name', '$datum', '$zeit', '$tisch')";
-
-if ($GLOBALS['conn']->query($sql) === TRUE) {
-    echo "Reservierung erfolgreich gespeichert";
-} else {
-    echo "Fehler beim Speichern der Reservierung: " . $GLOBALS['conn']->error;
-}
-
-
 // Eine neue Buchung erstellen
 function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar){
     $stmt = $GLOBALS['conn']->prepare("INSERT INTO buchungen (gastName, datum, anzahlPersonen, id_Tisch, id_Mitarbeiter, kommentar) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssiiis", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
     $stmt->execute();
+
+    if ($stmt->execute()== TRUE) {
+        echo "Reservierung erfolgreich gespeichert";
+    } else {
+        echo "Fehler beim Speichern der Reservierung: " . $GLOBALS['conn']->error;
+    }
+
     $stmt->close();
 }
 
@@ -44,7 +45,7 @@ function detailsAbfragen($id_Buchung){
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-        return "id: " . $row["id_Buchung"]. " - Name: " . $row["gastName"]. " - Datum: " . $row["datum"]. " - Anzahl Personen: ". $row["anzahlPersonen"]. " - Tischnummer: ". $row["idTisch"]. " - eingetragen durch Mitarbeiter: ". $row["idMitarbeiter"]. " - Kommentar: ". $row["kommentar"];
+        return "id: " . $row["id_Buchung"]. " - Name: " . $row["gastName"]. " - Datum: " . $row["datum"]. " - Anzahl Personen: ". $row["anzahlPersonen"]. " - Tischnummer: ". $row["id_Tisch"]. " - eingetragen durch Mitarbeiter: ". $row["id_Mitarbeiter"]. " - Kommentar: ". $row["kommentar"];
         }
     }
     else {
