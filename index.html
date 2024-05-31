@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Data</title>
+    <script>
+        function loadBookings() {
+            fetch('getBookings.php')
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.querySelector('#bookingsTable tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(booking => {
+                        let row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${booking.id}</td>
+                            <td>${booking.customer_name}</td>
+                            <td>${booking.booking_date}</td>
+                            <td>${booking.booking_time}</td>
+                            <td>${booking.service}</td>
+                            <td>${booking.status}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBookings);
+    </script>
+</head>
+<body>
+    <h1>Booking Data</h1>
+    <table id="bookingsTable" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Booking Date</th>
+                <th>Booking Time</th>
+                <th>Service</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Bookings will be dynamically inserted here -->
+        </tbody>
+    </table>
+</body>
+</html>
