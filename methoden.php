@@ -21,16 +21,16 @@ if ($conn->connect_error) {
 // SQL-Befehl zum Einfügen der Reservierung in die Datenbank
 $sql = "INSERT INTO reservierungen (name, datum, zeit, Tisch) VALUES ('$name', '$datum', '$zeit', '$tisch')";
 
-if ($conn->query($sql) === TRUE) {
+if ($GLOBALS['conn']->query($sql) === TRUE) {
     echo "Reservierung erfolgreich gespeichert";
 } else {
-    echo "Fehler beim Speichern der Reservierung: " . $conn->error;
+    echo "Fehler beim Speichern der Reservierung: " . $GLOBALS['conn']->error;
 }
 
 
 // Eine neue Buchung erstellen
 function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar){
-    $stmt = $conn->prepare("INSERT INTO buchungen (gastName, datum, anzahlPersonen, id_Tisch, id_Mitarbeiter, kommentar) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $GLOBALS['conn']->prepare("INSERT INTO buchungen (gastName, datum, anzahlPersonen, id_Tisch, id_Mitarbeiter, kommentar) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssiiis", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
     $stmt->execute();
     $stmt->close();
@@ -40,7 +40,7 @@ function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mit
 function detailsAbfragen($id_Buchung){
     $sql = "SELECT * FROM buchungen WHERE id_Buchung = ".$id_Buchung.";";
     // $ql->bind_param("i", $id_Buchung);
-    $result = $conn->query($sql);
+    $result = $GLOBALS['conn']->query($sql);
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -55,7 +55,7 @@ function detailsAbfragen($id_Buchung){
 // Eingabe von Nachname um Buchungen zu finden
 function buchungSuchen($eingabe) {
     $sql = "SELECT * FROM buchungen WHERE gastName LIKE '%".$eingabe."%';";
-    $result = $conn->query($sql);
+    $result = $GLOBALS['conn']->query($sql);
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -70,7 +70,7 @@ function buchungSuchen($eingabe) {
 // Alle Buchungen ausgeben
 function allesAnzeigen() {
     $sql = "SELECT * FROM buchungen";
-    $result = $conn->query($sql);
+    $result = $GLOBALS['conn']->query($sql);
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -84,7 +84,7 @@ function allesAnzeigen() {
 
 // Buchung löschen
 function buchungLoeschen($id_Buchung){
-    $stmt = $conn->prepare("DELETE FROM buchungen WHERE id_Buchung = ?");
+    $stmt = $GLOBALS['conn']->prepare("DELETE FROM buchungen WHERE id_Buchung = ?");
     $stmt->bind_param("i", $id_Buchung);
     $stmt->execute();
     $stmt->close();
@@ -93,7 +93,7 @@ function buchungLoeschen($id_Buchung){
 
 // Verbindung schließen
 function trennen(){
-    $conn->close();
+    $GLOBALS['conn']->close();
 }
 
 ?>
