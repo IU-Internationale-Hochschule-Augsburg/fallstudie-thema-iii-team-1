@@ -74,9 +74,11 @@ function allesAnzeigen() {
     $result = $GLOBALS['conn']->query($sql);
 
     if ($result->num_rows > 0) {
+        $Auflistung = array();
         while ($row = $result->fetch_assoc()) {
-        return "id: " . $row["id_Buchung"]. " - Name: " . $row["gastName"]. " - Datum: " . $row["datum"];
+        $Auflistung[] = "id: " . $row["id_Buchung"]. " - Name: " . $row["gastName"]. " - Datum: " . $row["datum"];
         }
+        return $Auflistung;
     }
     else {
         return "Keine Ergebnisse";
