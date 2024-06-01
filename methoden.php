@@ -97,4 +97,22 @@ function trennen(){
     $GLOBALS['conn']->close();
 }
 
+
+// Aktuell belegte Tische anzeigen
+
+function abfrageAktuellBelegt (){
+    date_default_timezone_set("Europe/Berlin");
+
+    $sql = "SELECT * FROM buchungen WHERE datum LIKE '".date("Y-m-d")." ".date("H").":%';";
+    $result = $GLOBALS['conn']->query($sql);
+
+    $TischArray = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+        $TischArray[] = $row["id_Tisch"];
+        }
+    }
+    return $TischArray;
+}
+
 ?>
