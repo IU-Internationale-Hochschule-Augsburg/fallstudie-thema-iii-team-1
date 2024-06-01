@@ -5,6 +5,8 @@ passwort: if0_36656054
 
 account if0_36656054 -> control panel -> online file manager
 
+websitelink: restaurantreservierung.42web.io
+
 
 login control panel / datenbank:
 username: if0_36656054
