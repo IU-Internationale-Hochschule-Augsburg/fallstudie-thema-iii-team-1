@@ -98,8 +98,7 @@ function trennen(){
 }
 
 
-// Aktuell belegte Tische anzeigen
-
+// Aktuell belegte Tische anzeigen #66
 function abfrageAktuellBelegt (){
     date_default_timezone_set("Europe/Berlin");
 
@@ -114,5 +113,21 @@ function abfrageAktuellBelegt (){
     }
     return $TischArray;
 }
+
+// Mögliche Tische aufgrund der Personenzahl liefern #64
+function abfrageTischgroesse ($anzahlPersonen){
+    $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= $anzahlPersonen;";
+    $result = $GLOBALS['conn']->query($sql);
+
+    $TischArray = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+        $TischArray[] = $row["id_Tisch"];
+        }
+    }
+    return $TischArray;
+}
+
+
 
 ?>
