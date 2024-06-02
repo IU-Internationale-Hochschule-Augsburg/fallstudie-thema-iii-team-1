@@ -70,21 +70,12 @@ function buchungSuchen($eingabe) {
     }
 }
 
-// Alle Buchungen ausgeben
+// Alle Buchungen ausgeben - liefert Array, für Ausgabe Methode in Array speichern und mit $variable["Spaltenname"] zugreifen
 function allesAnzeigen() {
     $sql = "SELECT * FROM buchungen";
-    $result = $GLOBALS['conn']->query($sql);
-
-    if ($result->num_rows > 0) {
-        $Auflistung = array();
-        while ($row = $result->fetch_assoc()) {
-        $Auflistung[] = "id: " . $row["id_Buchung"]. " - Name: " . $row["gastName"]. " - Datum: " . $row["datum"];
-        }
-        return $Auflistung;
-    }
-    else {
-        return "Keine Ergebnisse";
-    }
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
+    return $Ergebnisse;
 }
 
 // Buchung löschen
