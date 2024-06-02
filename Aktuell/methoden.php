@@ -22,7 +22,7 @@ if ($conn->connect_error) {
     die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
 }
 
-// Eine neue Buchung erstellen
+// Eine neue Buchung erstellen #36
 function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar){
     $stmt = $GLOBALS['conn']->prepare("INSERT INTO buchungen (gastName, datum, anzahlPersonen, id_Tisch, id_Mitarbeiter, kommentar) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssiiis", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
@@ -36,7 +36,7 @@ function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mit
     $stmt->close();
 }
 
-// Zu einer Buchungsnummer die Details ausgeben
+// Zu einer Buchungsnummer die Details ausgeben #67
 function detailsAbfragen($id_Buchung){
     $sql = "SELECT * FROM buchungen WHERE id_Buchung = ".$id_Buchung.";";
     // $ql->bind_param("i", $id_Buchung);
@@ -69,7 +69,7 @@ function buchungSuchen($eingabe) {
     }
 }
 
-// Alle Buchungen ausgeben - liefert Array, für Ausgabe Methode in Array speichern und mit $variable["Spaltenname"] zugreifen
+// Alle Buchungen ausgeben - liefert Array, für Ausgabe Methode in Array speichern und mit $variable["Spaltenname"] zugreifen #47
 function allesAnzeigen() {
     $sql = "SELECT * FROM buchungen";
     $abfrage = $GLOBALS['conn']->query($sql);
@@ -77,7 +77,7 @@ function allesAnzeigen() {
     return $Ergebnisse;
 }
 
-// Buchung löschen
+// Buchung löschen #41
 function buchungLoeschen($id_Buchung){
     $stmt = $GLOBALS['conn']->prepare("DELETE FROM buchungen WHERE id_Buchung = ?");
     $stmt->bind_param("i", $id_Buchung);
