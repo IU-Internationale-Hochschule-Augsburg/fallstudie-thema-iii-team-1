@@ -52,6 +52,7 @@ function detailsAbfragen($id_Buchung){
     }
 }
 
+// asggsgsda
 // Eingabe von Nachname um Buchungen zu finden
 function buchungSuchen($eingabe) {
     $sql = "SELECT * FROM buchungen WHERE gastName LIKE '%".$eingabe."%';";
