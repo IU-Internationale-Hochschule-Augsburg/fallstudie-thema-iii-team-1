@@ -8,6 +8,20 @@
 
 ### Website
 
+_(gehostet bei https://www.infinityfree.com/)_
+
+| Control Panel | Login E-Mail | Passwort | Websitelink |
+| --- | --- | --- | --- |
+| https://dash.infinityfree.com/login | florian.sefzik@iu-study.org | if0_36656054 | restaurantreservierung.42web.io |
+
+__Dateien hinterlegen:__ account if0_36656054 -> control panel -> online file manager
+
+login control panel / datenbank, falls benötigt:
+username: if0_36656054
+passwort: VnqZ61Gep0W8U
+
+
+
 ### Datenbank
 
 _(gehostet bei freesqldatabase.com)_
