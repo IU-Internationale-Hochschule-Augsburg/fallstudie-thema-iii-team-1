@@ -34,4 +34,4 @@ https://www.phpmyadmin.co/index.php
 
 Verbindung ist stabiler mit Client-Zugriff über MySQL Workbench https://dev.mysql.com/downloads/workbench/
 
-md.linkify.fuzzyLink : false
+"md.linkify.fuzzyLink" : false
