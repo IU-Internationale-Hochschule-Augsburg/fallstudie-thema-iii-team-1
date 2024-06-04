@@ -16,7 +16,8 @@ _(gehostet bei https://www.infinityfree.com/)_
 
 __Dateien hinterlegen:__ account if0_36656054 -> control panel -> online file manager
 
-Login für control panel, falls benötigt: &nbsp;
+Login für control panel, falls benötigt: 
+&nbsp;
 username: if0_36656054
 passwort: VnqZ61Gep0W8U
 
