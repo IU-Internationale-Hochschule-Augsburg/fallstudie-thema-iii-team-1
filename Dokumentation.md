@@ -5,7 +5,7 @@
 ## Backend
 
 ## Ressourcen
-&nbsp;
+
 ### Website
 
 _(gehostet bei https://www.infinityfree.com/)_
