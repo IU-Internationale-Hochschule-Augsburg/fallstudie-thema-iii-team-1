@@ -24,7 +24,7 @@ passwort: VnqZ61Gep0W8U
 
 ### Datenbank
 
-_(gehostet bei freesqldatabase.com)_
+_(gehostet bei https://www.freesqldatabase.com/)_
 
 https://www.phpmyadmin.co/index.php
 
