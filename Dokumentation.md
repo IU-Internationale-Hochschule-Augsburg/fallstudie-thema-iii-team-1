@@ -28,7 +28,7 @@ passwort: VnqZ61Gep0W8U
 _(gehostet bei https://www.freesqldatabase.com/)_
 
 | Link | Server | Database name | Database user | Database password | Port number |
-| ----- | ----- | --- | --- | --- | --- |
+| ----- | ----- | ----- | -----| ----- | ----- |
 | https://www.phpmyadmin.co/index.php | sql11.freesqldatabase.com | sql11700785 | sql11700785 | restaurantteam1backend | 3306 |
 
 Verbindung ist stabiler mit Client-Zugriff über MySQL Workbench https://dev.mysql.com/downloads/workbench/
