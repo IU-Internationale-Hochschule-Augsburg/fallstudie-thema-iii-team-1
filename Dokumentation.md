@@ -12,7 +12,7 @@ _(gehostet bei https://www.infinityfree.com/)_
 
 | Control Panel | Login E-Mail | Passwort | Websitelink |
 | --- | --- | --- | --- |
-| https://dash.infinityfree.com/login | florian.sefzik@iu-study.org | if0_36656054 | restaurantreservierung.42web.io |
+| https://dash.infinityfree.com/login | florian.sefzik<span>@</span>iu-study.org | if0_36656054 | restaurantreservierung.42web.io |
 
 __Dateien hinterlegen:__ account if0_36656054 -> control panel -> online file manager
 
@@ -33,5 +33,3 @@ https://www.phpmyadmin.co/index.php
 | sql11.freesqldatabase.com | sql11700785 | sql11700785 | restaurantteam1backend | 3306 |
 
 Verbindung ist stabiler mit Client-Zugriff über MySQL Workbench https://dev.mysql.com/downloads/workbench/
-
-"md.linkify.fuzzyLink" : false
