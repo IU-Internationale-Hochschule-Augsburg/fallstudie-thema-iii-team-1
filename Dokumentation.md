@@ -5,9 +5,8 @@
 ## Backend
 
 ## Ressourcen
-
-### Website
 &nbsp;
+### Website
 
 _(gehostet bei https://www.infinityfree.com/)_
 
@@ -24,7 +23,6 @@ passwort: VnqZ61Gep0W8U
 &nbsp;
 
 ### Datenbank
-&nbsp;
 
 _(gehostet bei freesqldatabase.com)_
 
