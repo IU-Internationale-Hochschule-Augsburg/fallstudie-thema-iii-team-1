@@ -24,7 +24,4 @@ Database password: restaurantteam1backend
 
 Port number: 3306
 
-
-
-
 Verbindung ist stabiler mit Client-Zugriff über MySQL Workbench https://dev.mysql.com/downloads/workbench/
