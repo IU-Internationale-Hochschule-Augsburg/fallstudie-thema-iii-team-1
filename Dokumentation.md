@@ -7,6 +7,7 @@
 ## Ressourcen
 
 ### Website
+&nbsp;
 
 _(gehostet bei https://www.infinityfree.com/)_
 
@@ -21,9 +22,9 @@ username: if0_36656054
 passwort: VnqZ61Gep0W8U
 
 &nbsp;
-&nbsp;
 
 ### Datenbank
+&nbsp;
 
 _(gehostet bei freesqldatabase.com)_
 
