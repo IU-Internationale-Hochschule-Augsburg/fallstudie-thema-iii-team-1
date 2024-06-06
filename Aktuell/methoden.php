@@ -123,6 +123,34 @@ function abfrageTischgroesse ($anzahlPersonen){
     return $TischArray;
 }
 
+// Überprüfung auf doppelte Buchungen #38
+function istDoppelteBuchung($datum, $id_Tisch) {
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM buchungen WHERE datum = ? AND id_Tisch = ?");
+    $stmt->bind_param("si", $datum, $id_Tisch);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
+    if ($result->num_rows > 0) {
+        $stmt->close();
+        return true; // Doppelte Buchung gefunden
+    } else {
+        $stmt->close();
+        return false; // Keine doppelte Buchung
+    }
+}
+
+// Eine bestehende Buchung bearbeiten #40 
+function buchungBearbeiten($id_Buchung, $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar) {
+    $stmt = $GLOBALS['conn']->prepare("UPDATE buchungen SET gastName =  ?, datum =  ?, anzahlPersonen = ?, id_Tisch = ?, id_Mitarbeiter = ?, kommentar =  ?  WHERE id_Buchung = ?");
+    $stmt->bind_param("ssiiisi", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar, $id_Buchung);
+
+    if ($stmt->execute()== TRUE) {
+        echo "Reservierung erfolgreich bearbeitet";
+    } else {
+        echo "Fehler beim Bearbeiten der Reservierung: " . $GLOBALS['conn']->error;
+    }
+
+    $stmt->close();
+}
 
 ?>
