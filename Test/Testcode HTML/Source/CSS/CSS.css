@@ -80,8 +80,6 @@ body {
 .boxleft {
     flex: 1;
     height: calc(100vh - 50px);
-    background-color: #e8e7e7;
-    box-shadow: 0 0 18px 0 #878787;
     padding: 20px;
     overflow-y: auto;
 }
@@ -90,7 +88,6 @@ body {
     font-weight: bold;
     font-size: 1.6rem;
     margin-bottom: 20px;
-    color: #373737;
 }
 
 .form-group {
@@ -102,34 +99,33 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input, select, button {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #d61ff2;
+    border: 1px solid #ccc;
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
+    background-color: #e8e7e7; /* Hintergrundfarbe angepasst */
 }
 
 button {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #104adb;
+    background-color: #5c5c5c;
     color: #ffffff;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #10d938;
+    background-color: #8a85ca;
 }
 
+/*div um das div mit der Klasse container */
 .wrapper {
     flex: 2;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     padding: 20px;
 }
 
@@ -137,6 +133,9 @@ button:hover {
     display: grid;
     grid-template-columns: repeat(4, 220px);
     grid-gap: 20px;
+    justify-content: center; /* Zentrierung der Tische horizontal */
+    align-items: center; /* Zentrierung der Tische vertikal */
+    margin-top: 50px; /* Platz unter dem Header */
 }
 
 .tisch {
