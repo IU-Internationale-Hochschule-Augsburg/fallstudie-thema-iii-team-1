@@ -9,6 +9,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles.css">    
+    <style>
+        .tisch {
+            margin: 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            position: relative;
+        }
+        .text-field {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -72,25 +84,20 @@
     </div>
 
     <script>
-        let clickCount = {}; // Objekt zur Verfolgung der Klicks auf jeden Tisch
-
         function selectTisch(element) {
-            if (!clickCount[element.textContent]) {
-                clickCount[element.textContent] = 1;
+            // Überprüfen, ob das Textfeld bereits existiert
+            if (!element.nextElementSibling || !element.nextElementSibling.classList.contains('text-field')) {
+                // Textfeld erstellen und einfügen
+                const textField = document.createElement('textarea');
+                textField.className = 'text-field';
+                textField.rows = 4;
+                textField.cols = 50;
+                textField.placeholder = 'Informationen zum Tisch eingeben...';
+                element.parentNode.insertBefore(textField, element.nextSibling);
             } else {
-                clickCount[element.textContent]++;
-            }
-            toggleTischColor(element);
-        }
-
-        function toggleTischColor(element) {
-            if (clickCount[element.textContent] === 1) {
-                element.style.backgroundColor = 'green';
-            } else if (clickCount[element.textContent] === 2) {
-                element.style.backgroundColor = 'red';
-            } else {
-                element.style.backgroundColor = '';
-                clickCount[element.textContent] = 0;
+                // Textfeld ein- oder ausblenden
+                const textField = element.nextElementSibling;
+                textField.style.display = textField.style.display === 'none' ? 'block' : 'none';
             }
         }
     </script>
