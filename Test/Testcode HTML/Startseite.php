@@ -46,6 +46,10 @@
                     <input type="text" id="name" name="name" required>
                 </div>
                 <div class="form-group">
+                    <label for="datum">Datum:</label>
+                    <input type="date" id="datum" name="datum" required>
+                </div>
+                <div class="form-group">
                     <label for="uhrzeit">Uhrzeit:</label>
                     <input type="time" id="uhrzeit" name="uhrzeit" required>
                 </div>
