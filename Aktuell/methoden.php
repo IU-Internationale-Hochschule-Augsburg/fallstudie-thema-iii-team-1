@@ -8,13 +8,8 @@ $id_Tisch = filter_input(INPUT_POST, 'idTisch', FILTER_VALIDATE_INT);
 $id_Mitarbeiter = filter_input(INPUT_POST, 'idMitarbeiter', FILTER_VALIDATE_INT);
 $kommentar = $_POST['kommentar'];
 
-// Serverdaten
-$servername = "sql11.freesqldatabase.com";
-$username = "sql11700785"; // Dein Datenbank-Benutzername
-$password = "restaurantteam1backend"; // Dein Datenbank-Passwort
-$dbname = "sql11700785"; // Dein Datenbankname
-
 // Verbindung erstellen
+require_once 'config.php'; //korrekten Unterordner angeben
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Überprüfen, ob die Verbindung erfolgreich war
