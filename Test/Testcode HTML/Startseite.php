@@ -45,7 +45,7 @@
     <div class="container-main">
         <div class="boxleft">
             <h2 class="Reservierungsüberschrift">Neue Reservierung:</h2>
-            <form action="#" method="post">
+            <form action="Reservations.php" method="post">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
