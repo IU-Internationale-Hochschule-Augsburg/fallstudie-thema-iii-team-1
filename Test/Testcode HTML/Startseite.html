@@ -20,6 +20,11 @@
         .text-field {
             margin-top: 10px;
         }
+        .info-text {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +56,8 @@
                 </div>
                 <div class="form-group">
                     <label for="uhrzeit">Uhrzeit:</label>
-                    <input type="time" id="uhrzeit" name="uhrzeit" required>
+                    <select id="uhrzeit" name="uhrzeit" required></select>
+                    <div class="info-text">Bis 5 Personen wird Ihr Tisch 1,5h reserviert, ab 5 für 2,5h</div>
                 </div>
                 <div class="form-group">
                     <label for="personen">Personen:</label>
@@ -104,6 +110,48 @@
                 textField.style.display = textField.style.display === 'none' ? 'block' : 'none';
             }
         }
+
+        // Funktion zur Generierung der Zeitoptionen
+        function generateTimeOptions() {
+            const select = document.getElementById('uhrzeit');
+            const times = [
+                { label: 'Mittags', start: 10, end: 15 },
+                { label: 'Abends', start: 15, end: 22.5 }
+            ];
+
+            times.forEach(time => {
+                const optGroup = document.createElement('optgroup');
+                optGroup.label = time.label;
+
+                for (let hour = time.start; hour < time.end; hour++) {
+                    for (let minute = 0; minute < 60; minute += 15) {
+                        if (hour === Math.floor(time.end) && minute > 0) break;
+
+                        const option = document.createElement('option');
+                        const hourStr = String(Math.floor(hour)).padStart(2, '0');
+                        const minuteStr = String(minute).padStart(2, '0');
+                        option.value = `${hourStr}:${minuteStr}`;
+                        option.text = `${hourStr}:${minuteStr}`;
+                        optGroup.appendChild(option);
+                    }
+                }
+
+                select.appendChild(optGroup);
+            });
+
+            // Entferne das selected Attribut von allen Optionen
+            Array.from(select.options).forEach(option => {
+                option.removeAttribute('selected');
+            });
+        }
+
+        // Zeitoptionen generieren, wenn das Dokument geladen ist
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTimeOptions();
+            // Setze das Uhrzeit-Feld auf leer, indem die erste Option ausgewählt wird
+            document.getElementById('uhrzeit').selectedIndex = -1;
+        });
     </script>
+
 </body>
 </html>
