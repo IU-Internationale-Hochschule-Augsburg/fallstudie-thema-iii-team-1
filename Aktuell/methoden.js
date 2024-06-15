@@ -11,4 +11,5 @@ function loadData() {
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send("function=hell&tischnummer=" + element.id);
 }
+
 </script>
