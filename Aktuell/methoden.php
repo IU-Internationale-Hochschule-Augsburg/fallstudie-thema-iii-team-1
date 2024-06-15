@@ -129,8 +129,14 @@ function abfrageTischgroesse ($anzahlPersonen){
 
 // Überprüfung auf doppelte Buchungen #38
 function istDoppelteBuchung($datum, $id_Tisch) {
-    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM buchungen WHERE datum = ? AND id_Tisch = ?");
-    $stmt->bind_param("si", $datum, $id_Tisch);
+    $subDate = substr($datum, 0, 10);
+    $subHour = substr($datum, 11, 2);
+    $subHourPlus = (int) $subHour +1;
+    $subHourMinus = (int) $subHour -1;
+    $subMin = substr($datum, 14, 2);
+
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM buchungen WHERE id_Tisch = ? AND datum > '".$subDate." ".$subHourMinus.":".$subMin.":00' AND datum < '".$subDate." ".$subHourPlus.":".$subMin.":00';");
+    $stmt->bind_param("i", $id_Tisch);
     $stmt->execute();
     $result = $stmt->get_result();
 
