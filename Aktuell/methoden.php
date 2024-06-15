@@ -9,7 +9,7 @@ $id_Mitarbeiter = filter_input(INPUT_POST, 'idMitarbeiter', FILTER_VALIDATE_INT)
 $kommentar = $_POST['kommentar'];
 
 // Verbindung erstellen
-require_once 'config.php'; //korrekten Unterordner angeben
+require_once 'Config/config.php';
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Überprüfen, ob die Verbindung erfolgreich war
