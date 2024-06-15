@@ -103,6 +103,16 @@ function abfrageAktuellBelegt (){
     return $TischArray;
 }
 
+// Buchungen für einen Tisch vom aktuellen Tag anzeigen #97
+function abfrageReservierungenProTisch ($tischnummer){
+    date_default_timezone_set("Europe/Berlin");
+
+    $sql = "SELECT * FROM buchungen WHERE datum LIKE '".date("Y-m-d")."%' AND id_Tisch = ".$tischnummer.";";
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
+    return $Ergebnisse;
+}
+
 // Mögliche Tische aufgrund der Personenzahl liefern #64
 function abfrageTischgroesse ($anzahlPersonen){
     $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= $anzahlPersonen;";
