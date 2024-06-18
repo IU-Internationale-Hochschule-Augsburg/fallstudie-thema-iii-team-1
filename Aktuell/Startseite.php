@@ -50,10 +50,10 @@
                     <label for="name">Name:</label>
                     <?php
                     if (isset($_GET["success"]) && $_GET["success"]=="false"){
-                    echo '<input type="text" id="name" name="name" required value='.$_GET["name"].'>';
+                        echo '<input type="text" id="name" name="name" required value='.$_GET["name"].'>';
                     }
                     else {
-                    echo '<input type="text" id="name" name="name" required>';
+                        echo '<input type="text" id="name" name="name" required>';
                     }
                     ?>
                 </div>
@@ -61,10 +61,10 @@
                     <label for="datum">Datum:</label>
                     <?php 
                     if (isset($_GET["success"])&& $_GET["success"]=="false"){
-                    echo '<input type="date" id="datum" name="datum" value='.$_GET["datum"].' required>'; 
+                        echo '<input type="date" id="datum" name="datum" value='.$_GET["datum"].' required>'; 
                     }
                     else {
-                    echo '<input type="date" id="datum" name="datum" required>';
+                        echo '<input type="date" id="datum" name="datum" required>';
                     }
                     ?>
                 </div>
@@ -75,34 +75,65 @@
                 </div>
                 <div class="form-group">
                     <label for="personen">Personen:</label>
-                    <input type="number" id="personen" name="personen" min="1" required>
+                    <?php
+                    if (isset($_GET["success"]) && $_GET["success"]=="false"){
+                        echo '<input type="number" id="personen" name="personen" min="1" required value='.$_GET["anzahl"].'>';
+                    }
+                    else {
+                        echo '<input type="number" id="personen" name="personen" min="1" required>';  
+                    }
+                    ?>
                 </div>
                 <div class="form-group">
                     <label for="tisch">Tisch Nummer:</label>
-                    <input type="text" id="tisch" name="tisch" required>
+                    <input type="text" id="tisch" name="tisch" required
+                    <?php
+                    if (isset($_GET["success"]) && $_GET["success"]=="false"){
+                        echo 'value='.$_GET["tisch"];
+                    }
+                    ?>
+                    >
                 </div>
                 <div class="form-group">
                     <label for="bearbeiter">Bearbeiter:</label>
                     <select id="bearbeiter" name="bearbeiter" required>
                         <option value="1">Tanja</option>
-                        <option value="2">Tim</option>
-                        <option value="3">Pascal</option>
+                        <option value="2"
+                        <?php
+                        if (isset($_GET["success"]) && $_GET["success"]=="false" && $_GET["bearbeiter"] == 2){
+                            echo 'selected="selected"';
+                        }
+                        ?>
+                        >Tim</option>
+                        <option value="3"
+                        <?php
+                        if (isset($_GET["success"]) && $_GET["success"]=="false" && $_GET["bearbeiter"] == 3){
+                            echo 'selected="selected"';
+                        }
+                        ?>
+                        >Pascal</option>
                     </select>
                 </div>
                  <div class="form-group">
                     <label for="kommentar">Kommentar:</label>
-                    <input type="text" id="kommentar" name="kommentar" required>
+                    <input type="text" id="kommentar" name="kommentar" required
+                    <?php
+                    if (isset($_GET["success"]) && $_GET["success"]=="false"){
+                        echo 'value='.$_GET["kommentar"];
+                    }
+                    ?>
+                    >
                 </div>
                 <button type="submit">Reservierung erstellen</button>
             </form>
             <?php
-                if (isset($_GET["success"])&& $_GET["success"]=="false"){
-                echo "<br>";    
-                echo "Tisch zu dieser Zeit belegt";
+                if (isset($_GET["success"]) && $_GET["success"]=="false"){
+                    echo "<br>";    
+                    echo "Tisch ist um ".$_GET["uhrzeit"]." Uhr belegt";
                 }
-                elseif (isset($_GET["success"])&& $_GET["success"]=="true"){
-                echo "<br>";    
-                echo "Buchung eingetragen";
+                elseif (isset($_GET["success"]) && $_GET["success"]=="true"){
+                    echo "<br>";    
+                    echo "Buchung eingetragen";
                 }
             ?>
         </div>
