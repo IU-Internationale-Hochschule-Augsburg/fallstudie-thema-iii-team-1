@@ -49,22 +49,22 @@
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <?php
-                    if (!isset($_GET["doppelt"])){
-                    echo '<input type="text" id="name" name="name" required>';
+                    if (isset($_GET["success"]) && $_GET["success"]=="false"){
+                    echo '<input type="text" id="name" name="name" required value='.$_GET["name"].'>';
                     }
                     else {
-                    echo '<input type="text" id="name" name="name" required value='.$_GET["name"].'>';
+                    echo '<input type="text" id="name" name="name" required>';
                     }
                     ?>
                 </div>
                 <div class="form-group">
                     <label for="datum">Datum:</label>
                     <?php 
-                    if (!isset($_GET["doppelt"])){
-                    echo '<input type="date" id="datum" name="datum" required>';
+                    if (isset($_GET["success"])&& $_GET["success"]=="false"){
+                    echo '<input type="date" id="datum" name="datum" value='.$_GET["datum"].' required>'; 
                     }
                     else {
-                    echo '<input type="date" id="datum" name="datum" value='.$_GET["datum"].' required>'; 
+                    echo '<input type="date" id="datum" name="datum" required>';
                     }
                     ?>
                 </div>
@@ -96,9 +96,13 @@
                 <button type="submit">Reservierung erstellen</button>
             </form>
             <?php
-                if (isset($_GET["doppelt"])){
+                if (isset($_GET["success"])&& $_GET["success"]=="false"){
                 echo "<br>";    
                 echo "Tisch zu dieser Zeit belegt";
+                }
+                elseif (isset($_GET["success"])&& $_GET["success"]=="true"){
+                echo "<br>";    
+                echo "Buchung eingetragen";
                 }
             ?>
         </div>
