@@ -62,7 +62,7 @@ $test = allesAnzeigen();
 foreach ($test as $zeile){
     echo "<br> ID Buchung: ".htmlspecialchars($zeile["id_Buchung"]);
     echo " - Name: ".htmlspecialchars($zeile["gastName"]);
-    echo " - Datum: ".htmlspecialchars($zeile["datum"]);
+    echo " - Datum: ".htmlspecialchars(substr($zeile["datum"], 0, 16));
     echo " - Anzahl Personen: ".htmlspecialchars($zeile["anzahlPersonen"]);
     echo " - Tisch: ".htmlspecialchars($zeile["id_Tisch"]);
     echo " - Bearbeiter: ".htmlspecialchars($zeile["id_Mitarbeiter"]);
