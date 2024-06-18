@@ -48,9 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!istDoppelteBuchung($datetime, $id_Tisch)){
     buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+    header("Location: Startseite.php?success=true");
     }
     else {
-        header("Location: Startseite.php?doppelt=true&name=".$gastName."&datum=".$datum);
+        header("Location: Startseite.php?success=false&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
     }
 }
 
