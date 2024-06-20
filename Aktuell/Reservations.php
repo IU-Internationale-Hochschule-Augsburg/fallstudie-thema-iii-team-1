@@ -72,5 +72,33 @@ foreach ($test as $zeile){
 
 </div>
 
+<script>
+//Backend
+function updateData() {
+    var id_Buchung = document.getElementById("id_Buchung").value;
+    var name = document.getElementById('name').value;
+    var datum = document.getElementById('datum').value;
+    var uhrzeit = document.getElementById('uhrzeit').value;
+    var kommentar = document.getElementById('kommentar').value;
+    var bearbeiter = document.getElementById('bearbeiter').value;
+    var tisch = document.getElementById('tisch').value;
+    var personen = document.getElementById('personen').value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '../../newtest.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            alert('Data updated successfully');
+            location.reload();
+        }
+    };
+
+    var params = 'function=update&idBuchung=' + encodeURIComponent(id_Buchung) + '&name=' + encodeURIComponent(name) + '&datum=' + encodeURIComponent(datum) + '&uhrzeit=' + encodeURIComponent(uhrzeit) + '&kommentar=' + encodeURIComponent(kommentar) + '&bearbeiter=' + encodeURIComponent(bearbeiter) + '&tisch=' + encodeURIComponent(tisch) + '&personen=' + encodeURIComponent(personen);
+    xhr.send(params);
+}
+</script>
+
 </body>
 </html>
