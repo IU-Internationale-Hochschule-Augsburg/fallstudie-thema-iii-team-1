@@ -36,7 +36,7 @@
     function abfrageAktuellBelegt ($tischnummer, $datumTest){
     date_default_timezone_set("Europe/Berlin");
 
-    $sql = "SELECT * FROM buchungen WHERE datum LIKE '".date("Y-m-d")."%' AND id_Tisch = ".$tischnummer.";";
+    $sql = "SELECT * FROM buchungen WHERE datum LIKE '".$datumTest."%' AND id_Tisch = ".$tischnummer.";";
     $abfrage = $GLOBALS['conn']->query($sql);
     $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
     return $Ergebnisse;
