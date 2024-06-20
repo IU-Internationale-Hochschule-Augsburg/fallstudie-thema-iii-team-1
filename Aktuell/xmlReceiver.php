@@ -41,6 +41,13 @@
     $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
     return $Ergebnisse;
     }
+
+    function buchungBearbeiten($id_Buchung, $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar) {
+        $stmt = $GLOBALS['conn']->prepare("UPDATE buchungen SET gastName =  ?, datum =  ?, anzahlPersonen = ?, id_Tisch = ?, id_Mitarbeiter = ?, kommentar =  ?  WHERE id_Buchung = ?");
+        $stmt->bind_param("ssiiisi", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar, $id_Buchung);
+        $stmt->execute();
+        $stmt->close();
+    }
     
     $function = $_POST["function"];
     $datumTest = $_POST["datum"];
@@ -49,12 +56,28 @@
         abfrageTischgroesse($anzahlPersonen);
     }
 
-    elseif ($function == "hell"){
+    elseif ($function == "belegt"){
         $xxx = abfrageAktuellBelegt($tischnummer, $datumTest);
         foreach ($xxx as $zeile){
             echo "ID Buchung: ".htmlspecialchars($zeile["id_Buchung"]);
             echo " - Uhrzeit: ".htmlspecialchars(substr($zeile["datum"], -8, 5).", ");
         }
+    }
+
+    elseif ($function == "update"){
+
+        $id_Buchung = mysqli_real_escape_string($GLOBALS['conn'], $_POST['idBuchung']);
+        $name = mysqli_real_escape_string($GLOBALS['conn'], $_POST['name']);
+        $uhrzeit = mysqli_real_escape_string($GLOBALS['conn'], $_POST['uhrzeit']);
+        $datum = mysqli_real_escape_string($GLOBALS['conn'], $_POST['datum']);
+        $datetime = $datum." ".$uhrzeit.":00";
+        $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+        $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
+        $kommentar = mysqli_real_escape_string($GLOBALS['conn'], $_POST['kommentar']);
+        $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
+
+        buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+
     }
     
 ?>
