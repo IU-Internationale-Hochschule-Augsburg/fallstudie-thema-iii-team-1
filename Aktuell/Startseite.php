@@ -155,16 +155,23 @@
     <script>
         function selectTisch(element) {
             // Überprüfen, ob das Textfeld bereits existiert
+            let textField;
             if (!element.nextElementSibling || !element.nextElementSibling.classList.contains('text-field')) {
                 // Textfeld erstellen und einfügen
-                const textField = document.createElement('textarea');
+                textField = document.createElement('textarea');
                 textField.className = 'text-field';
                 textField.rows = 4;
                 textField.cols = 50;
                 textField.placeholder = 'Informationen zum Tisch eingeben...';
                 element.parentNode.insertBefore(textField, element.nextSibling);
 
-                // Backend Code
+            } else {
+                // Textfeld ein- oder ausblenden
+                textField = element.nextElementSibling;
+                textField.style.display = textField.style.display === 'none' ? 'block' : 'none';
+            }
+
+             // Backend Code
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -173,13 +180,7 @@
                 };
                 xhr.open('POST', "../../newtest.php", true);
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xhr.send("function=hell&tischnummer=" + element.id);
-
-            } else {
-                // Textfeld ein- oder ausblenden
-                const textField = element.nextElementSibling;
-                textField.style.display = textField.style.display === 'none' ? 'block' : 'none';
-            }
+                xhr.send("function=hell&tischnummer=" + element.id + "&datum=" + document.getElementById('datum').value);
         }
 
         // Funktion zur Generierung der Zeitoptionen
