@@ -17,9 +17,9 @@ $loginPasswort = $_POST['password'];
 
 
 // Funktion zur Verarbeitung von Login-Daten 92
-function login($username, $password) {
-    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM logins WHERE benutzername = ? AND passwort = ?");
-    $stmt->bind_param("ss", $username, $password);
+function login($loginBenutzername, $loginPasswort) {
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM logins WHERE LoginName = ? AND password = ?");
+    $stmt->bind_param("ss", $loginBenutzername, $loginPasswort);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -28,6 +28,13 @@ function login($username, $password) {
     } else {
         return false; // Login fehlgeschlagen
     }
+}
+
+if (login($loginBenutzername, $loginPasswort)){
+    header("Location: Test/Testcode HTML/Startseite.php");
+}
+else{
+    header("Location: Test/Testcode HTML/LoginScreen.php?success=false&login=".$loginBenutzername);
 }
 
 ?>
