@@ -1,66 +1,32 @@
 <?php
     $anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
     $tischnummer = filter_input(INPUT_POST, 'tischnummer', FILTER_VALIDATE_INT);
-    
-    // Verbindung zur Datenbank herstellen
-    $servername = "sql11.freesqldatabase.com";
-    $username = "sql11700785"; // Dein Datenbank-Benutzername
-    
-    $_SERVER['PHP_AUTH_USER'] = "restaurant";
-    $_SERVER['PHP_AUTH_PW'] = "passwort";
-    require_once 'Config/config.php';
-
-    $dbname = "sql11700785"; // Dein Datenbankname
-
-    // Verbindung erstellen
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    // Überprüfen, ob die Verbindung erfolgreich war
-    if ($conn->connect_error) {
-        die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);
-    }
-    
-    function abfrageTischgroesse ($anzahlPersonen){
-    $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= ".$anzahlPersonen.";";
-    $result = $GLOBALS['conn']->query($sql);
-
-    $TischArray = array();
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-        $TischArray[] = $row["id_Tisch"];
-        }
-    }
-    print_r($TischArray);
-    }
-
-    function abfrageAktuellBelegt ($tischnummer, $datumTest){
-    date_default_timezone_set("Europe/Berlin");
-
-    $sql = "SELECT * FROM buchungen WHERE datum LIKE '".$datumTest."%' AND id_Tisch = ".$tischnummer.";";
-    $abfrage = $GLOBALS['conn']->query($sql);
-    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
-    return $Ergebnisse;
-    }
-
-    function buchungBearbeiten($id_Buchung, $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar) {
-        $stmt = $GLOBALS['conn']->prepare("UPDATE buchungen SET gastName =  ?, datum =  ?, anzahlPersonen = ?, id_Tisch = ?, id_Mitarbeiter = ?, kommentar =  ?  WHERE id_Buchung = ?");
-        $stmt->bind_param("ssiiisi", $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar, $id_Buchung);
-        $stmt->execute();
-        $stmt->close();
-    }
-    
-    $function = $_POST["function"];
     $datumTest = $_POST["datum"];
+
+    require_once 'methoden.php';
+
+    // Prüfen welche Anfrage übermittelt wird (function=X / $_POST["aktion"]=X)
+    $function = $_POST["function"];
 
     if ($function == "hello"){ 
         abfrageTischgroesse($anzahlPersonen);
     }
 
     elseif ($function == "belegt"){
-        $xxx = abfrageAktuellBelegt($tischnummer, $datumTest);
+        $xxx = abfrageBuchungenDatumTisch($tischnummer, $datumTest);
         foreach ($xxx as $zeile){
-            echo "ID Buchung: ".htmlspecialchars($zeile["id_Buchung"]);
-            echo " - Uhrzeit: ".htmlspecialchars(substr($zeile["datum"], -8, 5).", ");
+            echo " ".htmlspecialchars(substr($zeile["datum"], -8, 5))." Uhr: ";
+            echo "ID ".htmlspecialchars($zeile["id_Buchung"]).PHP_EOL;            
+        }
+    }
+
+    elseif ($function == "belegt2"){
+        
+        $xxx = abfrageBuchungenDatum($datumTest);
+        foreach ($xxx as $zeile){
+            echo "Tisch: ".htmlspecialchars($zeile["id_Tisch"]);
+            echo " - Uhrzeit: ".htmlspecialchars(substr($zeile["datum"], -8, 5));
+            echo " - ID ".htmlspecialchars($zeile["id_Buchung"])." +++++ ";       
         }
     }
 
@@ -76,8 +42,49 @@
         $kommentar = mysqli_real_escape_string($GLOBALS['conn'], $_POST['kommentar']);
         $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
 
-        buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
 
+        if (!istDoppelteBuchungEdit($datetime, $id_Tisch, $id_Buchung)){
+        buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar); 
+        echo 'Erfolgreich aktualisiert';
+        }
+        else{
+            echo 'Tisch zu dieser Zeit belegt';
+        }
     }
+
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "insert"){
+    $gastName = $_POST['name'];
+    $uhrzeit = $_POST['uhrzeit'];
+    $datum = $_POST['datum'];
+    $datetime = $datum." ".$uhrzeit.":00";
+    $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+    $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
+    $kommentar = $_POST['kommentar'];
+    $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
+
+    if (!istDoppelteBuchung($datetime, $id_Tisch)){
+    buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+    header("Location: Test/Testcode HTML/Startseite.php?success=true");
+    }
+    else {
+        header("Location: Test/Testcode HTML/Startseite.php?success=false&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+
+        /*
+        $data = array(
+        'success' => false,
+        'name' => $gastName,
+        'datum' => $datum,
+        'uhrzeit' => $uhrzeit,
+        'anzahl' => $anzahlPersonen,
+        'tisch' => $id_Tisch,
+        'bearbeiter' => $id_Mitarbeiter,
+        'kommentar' => $kommentar
+        );
+        $jsonData = urlencode(json_encode($data));
+
+        header("Location: Startseite.php?data=".$jsonData);
+        */
+    }
+}
     
 ?>
