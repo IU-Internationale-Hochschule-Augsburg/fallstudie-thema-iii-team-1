@@ -52,6 +52,18 @@
         }
     }
 
+
+    elseif ($function == "delete"){
+
+        $id_Buchung = mysqli_real_escape_string($GLOBALS['conn'], $_POST['idBuchung']);
+
+        // Buchung löschen #41
+        buchungLoeschen($id_Buchung);
+
+        echo 'Reservierung wurde gelöscht';
+
+    }
+
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "insert"){
     $gastName = $_POST['name'];
     $uhrzeit = $_POST['uhrzeit'];
