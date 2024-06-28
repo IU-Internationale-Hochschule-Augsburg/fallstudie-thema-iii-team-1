@@ -56,6 +56,16 @@ if (in_array($id_Tisch, $Ergebnisse)) {
 
 }
 
+// #69
+function pruefenTischgroesseAlle($anzahlPersonen) {
+
+ $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= " .$anzahlPersonen ;
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
+
+    return $Ergebnisse;
+}
+
 // Überprüfung auf doppelte Buchungen beim Editieren #38
 function istDoppelteBuchungEdit($datum, $id_Tisch, $id_Buchung) {
     $subDate = substr($datum, 0, 10);
@@ -92,7 +102,7 @@ function buchungEinfuegen($gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mit
 
     $stmt->close();
 }
-// Eine bestehende Buchung bearbeiten //NR.40 
+// Eine bestehende Buchung bearbeiten #40 
 
 function buchungBearbeiten($id_Buchung, $gastName, $datum, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar) {
         $stmt = $GLOBALS['conn']->prepare("UPDATE buchungen SET gastName =  ?, datum =  ?, anzahlPersonen = ?, id_Tisch = ?, id_Mitarbeiter = ?, kommentar =  ?  WHERE id_Buchung = ?");
@@ -223,6 +233,21 @@ function abfrageTischgroesse ($anzahlPersonen){
     return $TischArray;
 }
 
+// Bearbeitername anhand von Bearbeiternummer bekommen #100
+function getMitarbeiternameFromId ($id_Mitarbeiter){
+    $sql = "SELECT vorname FROM mitarbeiter WHERE id_Mitarbeiter =".$id_Mitarbeiter.";";
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
+    echo $Ergebnis;
+}
+
+// WIP
+function getIdFromMitarbeitername($bearbeiter){
+    $sql = "SELECT id_Mitarbeiter FROM mitarbeiter WHERE vorname ='".$bearbeiter."';";
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
+    return $Ergebnis;
+}
+
 
 ?>
-
