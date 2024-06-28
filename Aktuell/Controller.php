@@ -1,14 +1,16 @@
 <?php
-    $anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
+    
     $tischnummer = filter_input(INPUT_POST, 'tischnummer', FILTER_VALIDATE_INT);
     $datumTest = $_POST["datum"];
 
     require_once 'methoden.php';
+    require_once 'loginMethode.php';
 
     // Prüfen welche Anfrage übermittelt wird (function=X / $_POST["aktion"]=X)
     $function = $_POST["function"];
 
     if ($function == "hello"){ 
+        $anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
         abfrageTischgroesse($anzahlPersonen);
     }
 
@@ -65,27 +67,28 @@
     }
 
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "insert"){
-    $gastName = $_POST['name'];
-    $uhrzeit = $_POST['uhrzeit'];
-    $datum = $_POST['datum'];
-    $datetime = $datum." ".$uhrzeit.":00";
-    $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
-    $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
-    $kommentar = $_POST['kommentar'];
-    $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
+        $gastName = $_POST['name'];
+        $uhrzeit = $_POST['uhrzeit'];
+        $datum = $_POST['datum'];
+        $datetime = $datum." ".$uhrzeit.":00";
+        $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+        $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
+        $kommentar = $_POST['kommentar'];
+        $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
 
-    if (!istDoppelteBuchung($datetime, $id_Tisch)&&pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
-    buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
-    header("Location: Test/Testcode HTML/Startseite.php?success=true");
-    }
-    elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
-        header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=zuKlein&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
- }
+        if (!istDoppelteBuchung($datetime, $id_Tisch) && !pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
+        buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+        header("Location: Test/Testcode HTML/Startseite.php?success=true");
+        }
+        elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
+            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=zuKlein&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+        }
 
         else {
         header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=doppelt&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+        }
 
-        /*
+        /* JSON test
         $data = array(
         'success' => false,
         'name' => $gastName,
@@ -100,7 +103,62 @@
 
         header("Location: Startseite.php?data=".$jsonData);
         */
+        
     }
-}
+
+    // TODO
+    elseif ($function == "name"){
+        $id_Mitarbeiter = filter_input(INPUT_POST, 'mitarbeiterId', FILTER_VALIDATE_INT);
+        getMitarbeiternameFromId($id_Mitarbeiter);
+    }
+
+    // LOGIN WIP
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "login"){
+        
+        // Login-Daten #91
+        $loginBenutzername = $_POST['username'];
+        $loginPasswort = $_POST['password'];
+
+
+        if (login($loginBenutzername, $loginPasswort)){
+            header("Location: Test/Testcode HTML/Startseite.php");
+        }
+        else{
+            header("Location: Test/Testcode HTML/LoginScreen.php?success=false&login=".$loginBenutzername);
+        }
+    }
+
+    // LOGIN WIP
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "mitarbeiter"){
+
+    $name = $_POST['name'];
+    $password = $_POST['password'];
+    $hashedPW = password_hash($password, PASSWORD_BCRYPT);
+
+
+    mitarbeiterAnlegen($name, $hashedPW);
+
+    header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true");
+    }
+
+    
+    // #69
+    elseif ($function=="dynamisch"){
+        $anzahlP = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+        $test = pruefenTischgroesseAlle($anzahlP);
+        $uhrzeit = $_POST['uhrzeit'];
+        $datum = $_POST['datum'];
+        $datetime = $datum." ".$uhrzeit.":00";
+
+        foreach ($test as $zeile){
+            if (istDoppelteBuchung($datetime, $zeile["id_Tisch"])){
+                echo $zeile["id_Tisch"].": belegt".PHP_EOL;
+                }
+            else {
+                    echo $zeile["id_Tisch"].": nicht belegt".PHP_EOL;
+            }
+        }
+    }
+    
     
 ?>
