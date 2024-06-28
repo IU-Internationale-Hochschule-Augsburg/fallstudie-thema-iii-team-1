@@ -101,7 +101,7 @@
                     <select id="uhrzeit" name="uhrzeit" required>
                      <option value="" disabled selected>Bitte auswählen</option>
                     </select>
-                    <div class="info-text">Bis 5 Personen wird der Tisch 1,5h reserviert, ab 5 für 2,5h</div>
+                    <div class="info-text">Bis 5 Personen wird der Tisch 1,5h reserviert, ab 5 für 2,5h</div> <!-- stimmt nicht -->
                 </div>
                 <div class="form-group">
                     <label for="personen">Personen:</label>
@@ -111,7 +111,7 @@
                         echo 'value='.$_GET["anzahl"];
                         }
                     ?>
-                    >
+                    onkeyup="dynamischePruefung()">
                 </div>
                 <div class="form-group">
                     <label for="tisch">Tisch Nummer:</label>
@@ -123,6 +123,7 @@
                     ?>
                     >
                 </div>
+                <div id="dynamischeAusgabe"><b>...</b></div>
                 <div class="form-group">
     <label for="bearbeiter">Bearbeiter:</label>
     <select id="bearbeiter" name="bearbeiter" required>
@@ -279,6 +280,21 @@
         }
 
 
+// #69 ajax methode
+function dynamischePruefung(){
+var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById('dynamischeAusgabe').innerHTML = xhr.responseText;
+                }
+            };
+xhr.open('POST', "../../Controller.php", true);
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send("function=dynamisch&datum="+document.getElementById('datum').value+"&uhrzeit="+document.getElementById('uhrzeit').value+"&personen="+document.getElementById('personen').value);
+
+}
+
+
 // Funktion zur Generierung der Zeitoptionen
 function generateTimeOptions() {
     const select = document.getElementById('uhrzeit');
@@ -313,6 +329,8 @@ function generateTimeOptions() {
     });
 }
 
+
+
 // Zeitoptionen generieren, wenn das Dokument geladen ist
 document.addEventListener('DOMContentLoaded', function() {
     generateTimeOptions();
@@ -321,7 +339,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-    </script>
+
+
+</script>
 
 </body>
 </html>
