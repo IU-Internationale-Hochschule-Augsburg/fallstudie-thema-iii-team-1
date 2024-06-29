@@ -43,20 +43,42 @@ function istDoppelteBuchung($datum, $id_Tisch) {
 
 // Mögliche Tische werden gegen Personenzahl geprüft #64
 function pruefenTischgroesse($anzahlPersonen, $id_Tisch) {
+    $sql = $GLOBALS['conn']->prepare("SELECT anzahlPlaetze FROM tische WHERE id_Tisch = ?;");
+    $sql->bind_param("i", $id_Tisch);
 
- $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= " .$anzahlPersonen ;
-    $abfrage = $GLOBALS['conn']->query($sql);
-    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
- 
-if (in_array($id_Tisch, $Ergebnisse)) {
-   return true;
-} else {
-   return false;
+    if (!$sql) {
+        die("Preparation failed: " . $conn->error);
     }
 
-}
+    if (!$sql->execute()) {
+        die("Execution failed: " . $sql->error);
+    }
 
-// #69
+    $ergebnisse = $sql->get_result();
+
+    if ($ergebnisse->num_rows > 0) {
+        $row = $ergebnisse->fetch_assoc();
+        if ($row['anzahlPlaetze']>=$anzahlPersonen){
+        $sql->close();
+        return true;
+        }
+    }
+    $sql->close();
+    return false;
+
+       /*
+        if (in_array($hilfsvariable, $Ergebnisse["id_Tisch"])) {
+        return $id_Tisch;
+        } else {
+        return $Ergebnisse;
+            }
+
+        }
+        */
+}
+    
+ 
+
 function pruefenTischgroesseAlle($anzahlPersonen) {
 
  $sql = "SELECT id_Tisch FROM tische WHERE anzahlPlaetze >= " .$anzahlPersonen ;
@@ -241,7 +263,6 @@ function getMitarbeiternameFromId ($id_Mitarbeiter){
     echo $Ergebnis;
 }
 
-// WIP
 function getIdFromMitarbeitername($bearbeiter){
     $sql = "SELECT id_Mitarbeiter FROM mitarbeiter WHERE vorname ='".$bearbeiter."';";
     $abfrage = $GLOBALS['conn']->query($sql);
