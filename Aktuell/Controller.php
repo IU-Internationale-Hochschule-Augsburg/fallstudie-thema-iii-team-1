@@ -157,6 +157,7 @@
         }
     }
 
+
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['aktion'] == 'settings'){
             
             $moVormStart = $_POST['monday-start'].":00";
@@ -220,6 +221,37 @@
 
             header('Content-Type: application/json');
             echo json_encode($data);
+        }
+
+    // #123
+        elseif ($function=="settingsLaden"){
+            $day = $_POST['day'];
+            /*
+            $timeID= $_POST['timeID'];
+
+             $hilfe="vormStart";
+            if ($timeID == 2){
+                $hilfe="vormEnde";
+            }
+            elseif ($timeID == 3){
+                $hilfe="nachmStart";
+            }
+            elseif ($timeID == 4){
+                $hilfe="nachmEnde";
+            }
+            */
+
+            $data = settingsLadenEinzeln($day);
+
+            $response = [
+                'vormStart' => substr($data['vormStart'], 0, 2),
+                'vormEnde' => substr($data['vormEnde'], 0, 2),
+                'nachmStart' => substr($data['nachmStart'], 0, 2),
+                'nachmEnde' => substr($data['nachmEnde'], 0, 2),
+            ];
+
+            header('Content-Type: application/json');
+            echo json_encode($response);
         }
 
 ?>
