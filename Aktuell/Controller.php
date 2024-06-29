@@ -106,13 +106,11 @@
         
     }
 
-    // TODO
     elseif ($function == "name"){
         $id_Mitarbeiter = filter_input(INPUT_POST, 'mitarbeiterId', FILTER_VALIDATE_INT);
         getMitarbeiternameFromId($id_Mitarbeiter);
     }
 
-    // LOGIN WIP
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "login"){
         
         // Login-Daten #91
@@ -128,7 +126,6 @@
         }
     }
 
-    // LOGIN WIP
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "mitarbeiter"){
 
     $name = $_POST['name'];
@@ -142,7 +139,7 @@
     }
 
     
-    // #69
+    
     elseif ($function=="dynamisch"){
         $anzahlP = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
         $test = pruefenTischgroesseAlle($anzahlP);
@@ -159,6 +156,70 @@
             }
         }
     }
-    
-    
+
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['aktion'] == 'settings'){
+            
+            $moVormStart = $_POST['monday-start'].":00";
+            $moVormEnd = $_POST['monday-end'].":00";
+            $moNachmStart = $_POST['monday-lunch-start'].":00";
+            $moNachmEnd = $_POST['monday-lunch-end'].":00";
+
+            updateSettings(0, $moVormStart, $moVormEnd, $moNachmStart, $moNachmEnd);
+
+            $diVormStart = $_POST['tuesday-start'].":00";
+            $diVormEnd = $_POST['tuesday-end'].":00";
+            $diNachmStart = $_POST['tuesday-lunch-start'].":00";
+            $diNachmEnd = $_POST['tuesday-lunch-end'].":00";
+
+            updateSettings(1, $diVormStart, $diVormEnd, $diNachmStart, $diNachmEnd);
+
+            $miVormStart = $_POST['wednesday-start'].":00";
+            $miVormEnd = $_POST['wednesday-end'].":00";
+            $miNachmStart = $_POST['wednesday-lunch-start'].":00";
+            $miNachmEnd = $_POST['wednesday-lunch-end'].":00";
+
+            updateSettings(2, $miVormStart, $miVormEnd, $miNachmStart, $miNachmEnd);
+
+            $doVormStart = $_POST['thursday-start'].":00";
+            $doVormEnd = $_POST['thursday-end'].":00";
+            $doNachmStart = $_POST['thursday-lunch-start'].":00";
+            $doNachmEnd = $_POST['thursday-lunch-end'].":00";
+
+            updateSettings(3, $doVormStart, $doVormEnd, $doNachmStart, $doNachmEnd);
+
+            $frVormStart = $_POST['friday-start'].":00";
+            $frVormEnd = $_POST['friday-end'].":00";
+            $frNachmStart = $_POST['friday-lunch-start'].":00";
+            $frNachmEnd = $_POST['friday-lunch-end'].":00";
+
+            updateSettings(4, $frVormStart, $frVormEnd, $frNachmStart, $frNachmEnd);
+
+            $saVormStart = $_POST['saturday-start'].":00";
+            $saVormEnd = $_POST['saturday-end'].":00";
+            $saNachmStart = $_POST['saturday-lunch-start'].":00";
+            $saNachmEnd = $_POST['saturday-lunch-end'].":00";
+
+            updateSettings(5, $saVormStart, $saVormEnd, $saNachmStart, $saNachmEnd);
+
+            $soVormStart = $_POST['sunday-start'].":00";
+            $soVormEnd = $_POST['sunday-end'].":00";
+            $soNachmStart = $_POST['sundaylunch-start'].":00";
+            $soNachmEnd = $_POST['sunday-lunch-end'].":00";
+
+            updateSettings(6, $soVormStart, $soVormEnd, $soNachmStart, $soNachmEnd);
+
+            header("Location: Test/Testcode HTML/Settings.php?gespeichert=true");
+
+        }
+
+
+        elseif (isset($_GET['id_Wochentag'])) {
+            
+            $id_Wochentag = intval($_GET['id_Wochentag']);
+            $data = settingsLaden($id_Wochentag);
+
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        }
+
 ?>
