@@ -303,4 +303,32 @@ function settingsLaden($id_Wochentag){
     return $data;
 }
 
+// #123
+function settingsLadenEinzeln($day){
+   
+    if ($day == 0){
+        $day = 6;
+    }
+    else{
+    $day = $day - 1;
+    }
+    
+    $sql = $GLOBALS['conn']->prepare("SELECT * FROM oeffnungszeiten WHERE id_wochentag = ?;");
+    $sql->bind_param("i", $day);
+    $sql->execute();
+
+    $result = $sql->get_result();
+    $data = [];
+    if ($result->num_rows > 0) {
+        // Fetch the row
+        $data = $result->fetch_assoc();
+    }
+
+    // Close the statement and connection
+    $sql->close();
+
+    // Return data
+    return $data;
+}
+
 ?>
