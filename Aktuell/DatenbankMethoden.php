@@ -270,5 +270,37 @@ function getIdFromMitarbeitername($bearbeiter){
     return $Ergebnis;
 }
 
+function updateSettings($id_Wochentag, $vormStart, $vormEnde, $nachmStart, $nachmEnde) {
+        $stmt = $GLOBALS['conn']->prepare("UPDATE oeffnungszeiten SET vormStart=  ?, vormEnde =  ?, nachmStart = ?, nachmEnde = ? WHERE id_Wochentag = ?");
+        $stmt->bind_param("ssssi", $vormStart, $vormEnde, $nachmStart, $nachmEnde, $id_Wochentag);
+        $stmt->execute();
+        $stmt->close();
+/*
+    if ($stmt->execute()== TRUE) {
+        echo "Reservierung erfolgreich bearbeitet";
+    } else {
+        echo "Fehler beim Bearbeiten der Reservierung: " . $GLOBALS['conn']->error;
+    }
+*/
+}
+
+function settingsLaden($id_Wochentag){
+    $sql = $GLOBALS['conn']->prepare("SELECT vormStart, vormEnde, nachmStart, nachmEnde FROM oeffnungszeiten WHERE id_wochentag = ?;");
+    $sql->bind_param("i", $id_Wochentag);
+    $sql->execute();
+
+    $result = $sql->get_result();
+    $data = [];
+    if ($result->num_rows > 0) {
+        // Fetch the row
+        $data = $result->fetch_assoc();
+    }
+
+    // Close the statement and connection
+    $sql->close();
+
+    // Return data
+    return $data;
+}
 
 ?>
