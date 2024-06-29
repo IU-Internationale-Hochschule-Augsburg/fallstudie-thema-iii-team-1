@@ -76,7 +76,7 @@
         $kommentar = $_POST['kommentar'];
         $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
 
-        if (!istDoppelteBuchung($datetime, $id_Tisch) && !pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
+        if (!istDoppelteBuchung($datetime, $id_Tisch) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
         buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
         header("Location: Test/Testcode HTML/Startseite.php?success=true");
         }
