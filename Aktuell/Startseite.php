@@ -66,7 +66,7 @@
             <li class="active"><a href="Startseite.php">Home</a></li>
             <li><a href="Calendar.php">Calendar</a></li>
             <li><a href="Reservations.php">Reservations</a></li>
-            <li><a href="Settings.html">Settings</a></li>
+            <li><a href="Settings.php">Settings</a></li>
         </ul>
     </nav>
 
@@ -94,7 +94,7 @@
                         echo 'value='.$_GET["datum"];
                         }
                     ?>
-                    onchange="selectTisch2(document.getElementById('2')); selectTisch2(document.getElementById('1')); selectTisch2(document.getElementById('3')); selectTisch2(document.getElementById('4')); selectTisch2(document.getElementById('5')); selectTisch2(document.getElementById('6')); selectTisch2(document.getElementById('7')); selectTisch2(document.getElementById('8'))">
+                    onchange="selectTisch2(document.getElementById('2')); selectTisch2(document.getElementById('1')); selectTisch2(document.getElementById('3')); selectTisch2                                  (document.getElementById('4')); selectTisch2(document.getElementById('5')); selectTisch2(document.getElementById('6')); selectTisch2(document.getElementById('7'));                         selectTisch2(document.getElementById('8'))">
                 </div>
                 <div class="form-group">
                     <label for="uhrzeit">Uhrzeit:</label>
@@ -123,8 +123,9 @@
                     ?>
                     >
                 </div>
-                <div id="dynamischeAusgabe"><b>...</b></div>
+                <div id="dynamischeAusgabe"><b></b></div>
                 <div class="form-group">
+                <br>
     <label for="bearbeiter">Bearbeiter:</label>
     <select id="bearbeiter" name="bearbeiter" required>
         <option value="" disabled selected>Bitte auswählen</option>
@@ -149,6 +150,21 @@
         }
         ?>
         >Pascal</option>
+        <option value="4"
+        <?php
+        if (isset($_GET["success"]) && $_GET["success"]=="false" && $_GET["bearbeiter"] == 4){
+            echo 'selected="selected"';
+        }
+        ?>
+        >Florian</option>
+        <option value="5"
+        <?php
+        if (isset($_GET["success"]) && $_GET["success"]=="false" && $_GET["bearbeiter"] == 5){
+            echo 'selected="selected"';
+        }
+        ?>
+        >Aurelius</option>
+
     </select>
 </div>
 
@@ -279,13 +295,11 @@
             xhr.send("function=belegt&tischnummer=" + element.id + "&datum=" + document.getElementById('datum').value);
         }
 
-
-// #69 ajax methode
 function dynamischePruefung(){
 var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    document.getElementById('dynamischeAusgabe').innerHTML = xhr.responseText;
+                    document.getElementById('dynamischeAusgabe').innerHTML = "Mögliche Tische: <br />" + xhr.responseText;
                 }
             };
 xhr.open('POST', "../../Controller.php", true);
@@ -294,14 +308,48 @@ xhr.send("function=dynamisch&datum="+document.getElementById('datum').value+"&uh
 
 }
 
+const d = new Date();
+let day = d.getDay();
+let times = [];
 
-// Funktion zur Generierung der Zeitoptionen
+// Function to fetch settings from the server
+function getSettings(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Parse the JSON response
+            var response = JSON.parse(xhr.responseText);
+            // Call the callback function with the parsed response
+            callback(response);
+        }
+    };
+    xhr.open('POST', "../../Controller.php", true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send("function=settingsLaden&day="+day); // Example: passing 'day' as 6
+}
+
+// Function to set times based on the fetched startTime
+function setTimes(response) {
+    // Convert the start and end times to numbers
+    let vormStart = Number(response.vormStart);
+    let vormEnde = Number(response.vormEnde);
+    let nachmStart = Number(response.nachmStart);
+    let nachmEnde = Number(response.nachmEnde);
+    
+    // Update the global times array
+    times = [
+        { label: 'Mittags', start: vormStart, end: vormEnde },
+        { label: 'Abends', start: nachmStart, end: nachmEnde }
+    ];
+    
+    // Call the function to generate time options after setting times
+    generateTimeOptions();
+}
+
+// Function to generate time options
 function generateTimeOptions() {
     const select = document.getElementById('uhrzeit');
-    const times = [
-        { label: 'Mittags', start: 10, end: 15 },
-        { label: 'Abends', start: 15, end: 22.5 }
-    ];
+    
 
     times.forEach(time => {
         const optGroup = document.createElement('optgroup');
@@ -323,23 +371,20 @@ function generateTimeOptions() {
         select.appendChild(optGroup);
     });
 
-    // Entferne das selected Attribut von allen Optionen
+    // Remove the selected attribute from all options
     Array.from(select.options).forEach(option => {
         option.removeAttribute('selected');
     });
+
+    select.selectedIndex = 0;
+
 }
-
-
 
 // Zeitoptionen generieren, wenn das Dokument geladen ist
 document.addEventListener('DOMContentLoaded', function() {
-    generateTimeOptions();
-    // Setze das Uhrzeit-Feld auf leer, indem die erste Option ausgewählt wird
-    document.getElementById('uhrzeit').selectedIndex = 0;
+    // Fetch the settings and initialize times when the document is loaded
+    getSettings(setTimes); 
 });
-
-
-
 
 </script>
 
