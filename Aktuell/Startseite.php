@@ -308,6 +308,9 @@ xhr.send("function=dynamisch&datum="+document.getElementById('datum').value+"&uh
 
 }
 
+
+// #123 Mehrere Chat GPT Prompts: https://chatgpt.com/c/0f0f7e27-01e2-4a82-9dfc-8369bc8a3162 (Account Florian)
+
 const d = new Date();
 let day = d.getDay();
 let times = [];
