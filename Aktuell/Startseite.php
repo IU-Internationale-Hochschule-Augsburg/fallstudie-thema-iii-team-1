@@ -94,7 +94,7 @@
                         echo 'value='.$_GET["datum"];
                         }
                     ?>
-                    onchange="selectTisch2(document.getElementById('2')); selectTisch2(document.getElementById('1')); selectTisch2(document.getElementById('3')); selectTisch2                                  (document.getElementById('4')); selectTisch2(document.getElementById('5')); selectTisch2(document.getElementById('6')); selectTisch2(document.getElementById('7'));                         selectTisch2(document.getElementById('8'))">
+                    onchange="selectTisch2(document.getElementById('2')); selectTisch2(document.getElementById('1')); selectTisch2(document.getElementById('3')); selectTisch2                                  (document.getElementById('4')); selectTisch2(document.getElementById('5')); selectTisch2(document.getElementById('6')); selectTisch2(document.getElementById('7'));                         selectTisch2(document.getElementById('8')); setWeekday()">
                 </div>
                 <div class="form-group">
                     <label for="uhrzeit">Uhrzeit:</label>
@@ -308,13 +308,16 @@ xhr.send("function=dynamisch&datum="+document.getElementById('datum').value+"&uh
 
 }
 
-
-// #123 Mehrere Chat GPT Prompts: https://chatgpt.com/c/0f0f7e27-01e2-4a82-9dfc-8369bc8a3162 (Account Florian)
-
 const d = new Date();
 let day = d.getDay();
 let times = [];
 
+// Methode für Öffnungszeiten basierend auf ausgewähltem Datum
+function setWeekday(){
+    let hilfdate = new Date(document.getElementById('datum').value);
+    day = hilfdate.getDay();
+    getSettings(setTimes); 
+}
 // Function to fetch settings from the server
 function getSettings(callback) {
     var xhr = new XMLHttpRequest();
@@ -353,6 +356,14 @@ function setTimes(response) {
 function generateTimeOptions() {
     const select = document.getElementById('uhrzeit');
     
+    select.innerHTML = '';
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.text = 'Uhrzeit auswählen ...';
+    placeholderOption.selected = true;
+    placeholderOption.disabled = true;
+    select.appendChild(placeholderOption);
 
     times.forEach(time => {
         const optGroup = document.createElement('optgroup');
