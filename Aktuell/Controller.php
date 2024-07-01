@@ -1,4 +1,11 @@
 <?php
+
+    function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+    }
     
     $tischnummer = filter_input(INPUT_POST, 'tischnummer', FILTER_VALIDATE_INT);
     $datumTest = $_POST["datum"];
@@ -77,15 +84,19 @@
         $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
 
         if (!istDoppelteBuchung($datetime, $id_Tisch) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
-        buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
-        header("Location: Test/Testcode HTML/Startseite.php?success=true");
+            buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+            header("Location: Test/Testcode HTML/Startseite.php?success=true");
         }
         elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
             header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=zuKlein&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
         }
 
-        else {
-        header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=doppelt&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+        elseif(istDoppelteBuchung($datetime, $id_Tisch)) {
+            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=doppelt&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+        }
+
+        else{
+            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=ungueltig");
         }
 
         /* JSON test
@@ -126,16 +137,15 @@
         }
     }
 
-    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "mitarbeiter"){
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['aktion'] == 'mitarbeiter'){
 
-    $name = $_POST['name'];
-    $password = $_POST['password'];
-    $hashedPW = password_hash($password, PASSWORD_BCRYPT);
-
-
-    mitarbeiterAnlegen($name, $hashedPW);
-
-    header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true");
+        $name = $_POST['name'];
+        $password = $_POST['password'];
+        
+        mitarbeiterAnlegen($name, $password);
+        
+        header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true&user=".$name);
+        exit();
     }
 
     
@@ -223,7 +233,7 @@
             echo json_encode($data);
         }
 
-    // #123
+
         elseif ($function=="settingsLaden"){
             $day = $_POST['day'];
             /*
