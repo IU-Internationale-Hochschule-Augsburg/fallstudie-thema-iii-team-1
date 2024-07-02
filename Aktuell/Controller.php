@@ -141,11 +141,17 @@
 
         $name = $_POST['name'];
         $password = $_POST['password'];
-        
-        mitarbeiterAnlegen($name, $password);
-        
-        header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true&user=".$name);
-        exit();
+        $adminPW = $_POST['adminPW'];
+
+        if(login("admin", $adminPW)){
+            mitarbeiterAnlegen($name, $password);
+            header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true&user=".$name);
+            exit();
+        }
+        else{
+            header("Location: Test/Testcode HTML/mitarbeiterAnlegen.php?success=false");
+            exit();
+        }
     }
 
     
