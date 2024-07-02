@@ -156,6 +156,7 @@ function detailsAbfragen($id_Buchung){
     }
 }
 
+// rauslöschen? umgesetzt durch Frontend (JavaScript)
 // Eingabe von Nachname um Buchungen zu finden
 function buchungSuchen($eingabe) {
     $sql = "SELECT * FROM buchungen WHERE gastName LIKE '%".$eingabe."%';";
@@ -181,6 +182,14 @@ function allesAnzeigen() {
     return $Ergebnisse;
 }
 
+// Alle Buchungen ab heutigem Datum ausgeben - für Reservations Seite #120
+function allesAnzeigenAbHeute() {
+    $sql = "SELECT * FROM buchungen WHERE datum >= '".date("Y-m-d")."';";
+    $abfrage = $GLOBALS['conn']->query($sql);
+    $Ergebnisse = $abfrage->fetch_all(MYSQLI_ASSOC);
+    return $Ergebnisse;
+}
+
 // Buchung löschen #41
 function buchungLoeschen($id_Buchung){
     $stmt = $GLOBALS['conn']->prepare("DELETE FROM buchungen WHERE id_Buchung = ?");
@@ -188,13 +197,6 @@ function buchungLoeschen($id_Buchung){
     $stmt->execute();
     $stmt->close();
 }
-
-
-// Verbindung schließen
-function trennen(){
-    $GLOBALS['conn']->close();
-}
-
 
 // Aktuell belegte Tische anzeigen #66
 function abfrageAktuellBelegt (){
@@ -255,6 +257,7 @@ function abfrageTischgroesse ($anzahlPersonen){
     return $TischArray;
 }
 
+// TODO
 // Bearbeitername anhand von Bearbeiternummer bekommen #100
 function getMitarbeiternameFromId ($id_Mitarbeiter){
     $sql = "SELECT vorname FROM mitarbeiter WHERE id_Mitarbeiter =".$id_Mitarbeiter.";";
@@ -262,13 +265,15 @@ function getMitarbeiternameFromId ($id_Mitarbeiter){
     $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
     echo $Ergebnis;
 }
-
 function getIdFromMitarbeitername($bearbeiter){
     $sql = "SELECT id_Mitarbeiter FROM mitarbeiter WHERE vorname ='".$bearbeiter."';";
     $abfrage = $GLOBALS['conn']->query($sql);
     $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
     return $Ergebnis;
 }
+
+
+
 
 function updateSettings($id_Wochentag, $vormStart, $vormEnde, $nachmStart, $nachmEnde) {
         $stmt = $GLOBALS['conn']->prepare("UPDATE oeffnungszeiten SET vormStart=  ?, vormEnde =  ?, nachmStart = ?, nachmEnde = ? WHERE id_Wochentag = ?");
@@ -303,7 +308,6 @@ function settingsLaden($id_Wochentag){
     return $data;
 }
 
-// #123
 function settingsLadenEinzeln($day){
    
     if ($day == 0){
@@ -330,5 +334,6 @@ function settingsLadenEinzeln($day){
     // Return data
     return $data;
 }
+
 
 ?>
