@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
 }
 
 //Alle Buchungen werden abgerufen
-$test = allesAnzeigen();
+$test = allesAnzeigenAbHeute();
 
 echo '<form method="POST" action="">';
 echo '<input type="text" name="search" placeholder="Suche nach Namen" value="'.htmlspecialchars($searchTerm).'">';
