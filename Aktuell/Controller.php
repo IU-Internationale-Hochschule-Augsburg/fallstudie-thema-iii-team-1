@@ -52,9 +52,12 @@
         $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
 
 
-        if (!istDoppelteBuchungEdit($datetime, $id_Tisch, $id_Buchung)){
-        buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar); 
-        echo 'Erfolgreich aktualisiert';
+        if (!istDoppelteBuchungEdit($datetime, $id_Tisch, $id_Buchung) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
+            buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar); 
+            echo 'Erfolgreich aktualisiert';
+        }
+        elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
+            echo 'Tisch zu klein';
         }
         else{
             echo 'Tisch zu dieser Zeit belegt';
