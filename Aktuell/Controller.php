@@ -125,6 +125,13 @@
         getMitarbeiternameFromId($id_Mitarbeiter);
     }
 
+    elseif ($function == "mitarbeiterID"){
+        $name = $_POST['name'];
+        $test = getIDfromMitarbeitername($name);
+        header('Content-Type: application/json');
+        echo json_encode($test);
+    }
+
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "login"){
         
         // Login-Daten #91
