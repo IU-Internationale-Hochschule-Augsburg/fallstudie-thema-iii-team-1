@@ -257,7 +257,6 @@ function abfrageTischgroesse ($anzahlPersonen){
     return $TischArray;
 }
 
-// TODO
 // Bearbeitername anhand von Bearbeiternummer bekommen #100
 function getMitarbeiternameFromId ($id_Mitarbeiter){
     $sql = "SELECT vorname FROM mitarbeiter WHERE id_Mitarbeiter =".$id_Mitarbeiter." LIMIT 1;";
@@ -271,10 +270,10 @@ function getIdFromMitarbeitername($bearbeiter){
     $sql = "SELECT id_Mitarbeiter FROM mitarbeiter WHERE vorname ='".$bearbeiter."';";
     $abfrage = $GLOBALS['conn']->query($sql);
     $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
-    return $Ergebnis;
+    foreach($Ergebnis as $row){
+    return $row['id_Mitarbeiter'];
+    }
 }
-
-
 
 
 function updateSettings($id_Wochentag, $vormStart, $vormEnde, $nachmStart, $nachmEnde) {
