@@ -260,10 +260,12 @@ function abfrageTischgroesse ($anzahlPersonen){
 // TODO
 // Bearbeitername anhand von Bearbeiternummer bekommen #100
 function getMitarbeiternameFromId ($id_Mitarbeiter){
-    $sql = "SELECT vorname FROM mitarbeiter WHERE id_Mitarbeiter =".$id_Mitarbeiter.";";
+    $sql = "SELECT vorname FROM mitarbeiter WHERE id_Mitarbeiter =".$id_Mitarbeiter." LIMIT 1;";
     $abfrage = $GLOBALS['conn']->query($sql);
     $Ergebnis = $abfrage->fetch_all(MYSQLI_ASSOC);
-    echo $Ergebnis;
+    foreach($Ergebnis as $row){
+    return $row['vorname'];
+    }
 }
 function getIdFromMitarbeitername($bearbeiter){
     $sql = "SELECT id_Mitarbeiter FROM mitarbeiter WHERE vorname ='".$bearbeiter."';";
