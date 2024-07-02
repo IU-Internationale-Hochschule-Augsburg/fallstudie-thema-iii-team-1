@@ -220,7 +220,7 @@
 
             $soVormStart = $_POST['sunday-start'].":00";
             $soVormEnd = $_POST['sunday-end'].":00";
-            $soNachmStart = $_POST['sundaylunch-start'].":00";
+            $soNachmStart = $_POST['sunday-lunch-start'].":00";
             $soNachmEnd = $_POST['sunday-lunch-end'].":00";
 
             updateSettings(6, $soVormStart, $soVormEnd, $soNachmStart, $soNachmEnd);
