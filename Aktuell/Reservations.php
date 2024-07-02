@@ -112,7 +112,7 @@
                         echo '<td>'.htmlspecialchars(substr($zeile["datum"], 0, 16)).'</td>';
                         echo '<td>'.htmlspecialchars($zeile["anzahlPersonen"]).'</td>';
                         echo '<td>'.htmlspecialchars($zeile["id_Tisch"]).'</td>';
-                        echo '<td>'.htmlspecialchars($zeile["id_Mitarbeiter"]).'</td>';
+                        echo '<td>'.htmlspecialchars(getMitarbeiternameFromId($zeile["id_Mitarbeiter"])).'</td>';
                         echo '<td>'.htmlspecialchars($zeile["kommentar"]).'</td>';
                         echo '</tr>';
                     }
@@ -171,7 +171,8 @@
         document.getElementById("uhrzeit").value = cells[2].innerText.split(" ")[1];
         document.getElementById("personen").value = cells[3].innerText;
         document.getElementById("tisch").value = cells[4].innerText;
-        document.getElementById("bearbeiter").value = Number(cells[5].innerText);
+        //document.getElementById("bearbeiter").value =
+        getMitarbeiterID(cells[5].innerText);
         document.getElementById("kommentar").value = cells[6].innerText;
         // Formular anzeigen
         document.getElementById("editModal").style.display = "block";
@@ -225,6 +226,20 @@
         var params = 'function=delete&idBuchung=' + encodeURIComponent(id_Buchung);
         xhr.send(params);
     }
+
+    function getMitarbeiterID(nameTest){
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById("bearbeiter").value = response;
+            }
+        };
+        xhr.open('POST', "../../Controller.php", true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send("function=mitarbeiterID&name=" + nameTest);
+    }
+
 </script>
 
 </body>
