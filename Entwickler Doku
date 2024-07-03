@@ -1,0 +1,61 @@
+
+Entwicklerdokumentation für das Restaurant Reservierungssystem
+
+1. Einleitung
+Das Restaurant Reservierungssystem ist eine webbasierte Anwendung, die speziell für interne Mitarbeiter eines Restaurants entwickelt wurde. 
+Es ermöglicht diesen Mitarbeitern, Reservierungen zu erstellen, zu verwalten und zu bearbeiten. Diese Dokumentation dient als umfassende Anleitung 
+für Entwickler, die mit dem System arbeiten möchten, sei es für Wartung, Erweiterungen oder Anpassungen.
+
+2. Voraussetzungen
+Um das Restaurant Reservierungssystem zu nutzen, müssen folgende Voraussetzungen erfüllt sein:
+
+Funktionierender Computer: Auf dem System muss ein beliebiges Betriebssystem installiert sein.
+
+Webbrowser und Infinity Free: Der Zugang erfolgt über den Webbrowser, indem man sich bei Infinity Free (https://www.infinityfree.com/) mit 
+den bereitgestellten Login-Daten anmeldet. Infinity Free bietet Hosting-Services, auf denen die Anwendung gehostet wird.
+
+3. Architektur
+Das System ist in zwei Hauptkomponenten unterteilt, die eng miteinander interagieren:
+
+Frontend
+Das Frontend ist verantwortlich für die Benutzeroberfläche der Anwendung. Es kümmert sich um die visuelle Darstellung der Seiten und die Interaktion mit dem Benutzer.
+
+Benutzeroberfläche: Das Frontend-Team erstellt die Oberfläche der Anwendung, einschließlich aller Formulare, Tabellen und Navigationselemente.
+Interaktive Elemente: Es implementiert die Logik für die Anzeige von Tischen, Reservierungen und anderen relevanten Informationen.
+
+Backend
+Das Backend verwaltet die Logik hinter den Kulissen. Es verarbeitet die Eingaben vom Benutzer, kommuniziert mit der Datenbank und stellt sicher, dass die Geschäftsregeln eingehalten werden.
+
+Datenverarbeitung: Das Backend-Team ist dafür zuständig, die Benutzeroberfläche mit der Datenbank zu verknüpfen und die erforderlichen Datenoperationen durchzuführen.
+Geschäftslogik: Hier werden Regeln implementiert, die sicherstellen, dass nur autorisierte Benutzer Änderungen vornehmen können und dass die Reservierungen den Öffnungszeiten des Restaurants entsprechen.
+
+Funktionalitäten im Überblick:
+Anmeldung und Registrierung: Benutzer müssen sich authentifizieren, um auf die Funktionen des Systems zugreifen zu können.
+Startseite: Bietet ein Reservierungsformular sowie eine Übersicht über die verfügbaren Tische und deren aktuelle Reservierungen.
+Navigationsleiste: Enthält einen Kalender zur Auswahl von Tagen, an denen Reservierungen angezeigt werden sollen.
+Reservierungsverwaltung: Erlaubt das Suchen, Anzeigen, Bearbeiten und Löschen von Reservierungen.
+Einstellungen: Zeigt die Öffnungszeiten des Restaurants an und passt das Reservierungsformular entsprechend an.
+
+Datenfluss:
+Neue Reservierungen und Benutzerdaten, die über das Formular eingetragen werden, werden sicher in einer MySQL-Datenbank gespeichert.
+Bei Bedarf werden die gespeicherten Daten aus der Datenbank abgerufen, um sie auf der Benutzeroberfläche anzuzeigen oder zu bearbeiten.
+
+4. Verwendete Technologien
+Die folgenden Technologien werden im Restaurant Reservierungssystem verwendet:
+
+Webserver: Die Anwendung ist auf dem Webserver von Infinity Free gehostet.
+Datenbank: Zur Speicherung der Daten wird eine MySQL-Datenbank über My.php genutzt.
+
+5. Code-Dokumentation
+Der Quellcode des Systems ist an wichtigen Stellen ausführlich kommentiert, um die Wartbarkeit und Weiterentwicklung zu erleichtern. 
+Die Kommentare erklären spezifische Funktionen, komplexe Algorithmen, Datenbankabfragen und Schnittstellen zwischen Frontend und Backend.
+
+6. Testanleitung (fehlt noch)
+Eine detaillierte Anleitung zum Testen des Systems wird bereitgestellt. Sie umfasst die Einrichtung einer Testumgebung, 
+die Erstellung von Testdaten und die Durchführung von Tests, um sicherzustellen, dass das System stabil und fehlerfrei läuft.
+
+7. Wartung und Beitrag (fehlt noch)
+Informationen zur Wartung des Systems, zur Versionskontrolle sowie zur Beitragserstellung und -verwaltung für Entwickler werden noch hinzugefügt.
+
+Diese Entwicklerdokumentation dient dazu, Entwicklern eine klare Anleitung und Übersicht über das Restaurant Reservierungssystem zu bieten. 
+Sie wird regelmäßig aktualisiert, um Änderungen und Erweiterungen im System widerzuspiegeln.
