@@ -1,3 +1,13 @@
+<?php
+
+session_start();
+
+if (!isset($_SESSION["Angemeldet"])){
+    header("Location: LoginScreen.php");
+}
+
+?>
+    
 <!DOCTYPE html>
 <html lang="de">
 <head>
