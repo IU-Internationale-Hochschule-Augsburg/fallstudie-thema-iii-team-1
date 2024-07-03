@@ -29,14 +29,37 @@
         }
     }
 
+    //kaputt?
     elseif ($function == "belegt2"){
-        
+        $datumTest = $_POST['datum'];
         $xxx = abfrageBuchungenDatum($datumTest);
         foreach ($xxx as $zeile){
             echo "Tisch: ".htmlspecialchars($zeile["id_Tisch"]);
             echo " - Uhrzeit: ".htmlspecialchars(substr($zeile["datum"], -8, 5));
-            echo " - ID ".htmlspecialchars($zeile["id_Buchung"])." +++++ ";       
+            echo " - ID ".htmlspecialchars($zeile["id_Buchung"])." +++++ ";     
         }
+    }
+
+    elseif ($function == "belegt3") {
+        $datumTest = $_POST['datum'];
+        $tables = [];
+        $totalBookings = 0;
+
+        for ($i = 1; $i <= 8; $i++) {
+            $tableBookings = abfrageBuchungenDatumTisch($i, $datumTest);
+            $totalBookings += count($tableBookings);
+
+            $bookings = [];
+            foreach ($tableBookings as $zeile) {
+                $bookings[] = "Uhrzeit: " . substr($zeile["datum"], -8, 5) . " - ID: " . $zeile["id_Buchung"];
+            }
+
+            $tables["table" . $i] = implode("\n", $bookings);
+        }
+
+        $tables['totalBookings'] = $totalBookings;
+
+        echo json_encode($tables);
     }
 
     elseif ($function == "update"){
@@ -175,10 +198,10 @@
 
         foreach ($test as $zeile){
             if (istDoppelteBuchung($datetime, $zeile["id_Tisch"])){
-                echo $zeile["id_Tisch"].": belegt".PHP_EOL;
+                    echo $zeile["id_Tisch"].": belegt".PHP_EOL;
                 }
             else {
-                    echo $zeile["id_Tisch"].": nicht belegt".PHP_EOL;
+                    echo $zeile["id_Tisch"].": frei".PHP_EOL;
             }
         }
     }
