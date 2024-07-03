@@ -1,5 +1,8 @@
 <?php
 
+    session_start();
+
+
     function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -51,7 +54,7 @@
 
             $bookings = [];
             foreach ($tableBookings as $zeile) {
-                $bookings[] = "Uhrzeit: " . substr($zeile["datum"], -8, 5) . " - ID: " . $zeile["id_Buchung"];
+                $bookings[] = "Uhrzeit: " . substr($zeile["datum"], -8, 5) . " - ID: " . $zeile["id_Buchung"] . " - Personen: " . $zeile["anzahlPersonen"];
             }
 
             $tables["table" . $i] = implode("\n", $bookings);
@@ -163,9 +166,11 @@
 
 
         if (login($loginBenutzername, $loginPasswort)){
+            $_SESSION["Angemeldet"] = true; 
             header("Location: Test/Testcode HTML/Startseite.php");
         }
         else{
+            $_SESSION["Angemeldet"] = false;
             header("Location: Test/Testcode HTML/LoginScreen.php?success=false&login=".$loginBenutzername);
         }
     }
