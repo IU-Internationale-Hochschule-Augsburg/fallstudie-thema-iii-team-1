@@ -39,14 +39,24 @@
         </div>
         <button type="submit">Anmelden</button>
         <div class="neueRegistrierung">
+        <br>
             <a href="neueRegistrierung.html">Noch keinen Account, dann klicke hier</a>
         </div>
     </form>
 
 <?php
-    if ($_GET['success']=="false"){echo "Ungültige Eingabe";}
+    echo "<br>";
+    if ($_GET['success']=="false"){
+        echo "Ungültige Eingabe";
+    }
     elseif (isset($_GET['erstellt'])){
         echo "User ".$_GET['user']." wurde erstellt";
+    }
+    elseif ($_GET['logout'] == "true"){
+        echo "Erfolgreich ausgeloggt";
+    }
+    elseif ($_GET['timeout'] == "true"){
+        echo "Sitzung abgelaufen";
     }
 ?>
 
