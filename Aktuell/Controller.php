@@ -1,299 +1,135 @@
 <?php
 
-    session_start();
+    require_once 'phpini.php';
+    //session_start();
 
-
-    function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    function sanitizeInput($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
     
-    $tischnummer = filter_input(INPUT_POST, 'tischnummer', FILTER_VALIDATE_INT);
-    $datumTest = $_POST["datum"];
-
     require_once 'methoden.php';
     require_once 'loginMethode.php';
 
-    // Prüfen welche Anfrage übermittelt wird (function=X / $_POST["aktion"]=X)
+
+    // AJAX-Requests
+
+    // Prüfen welche Anfrage übermittelt wird (function=X)
     $function = $_POST["function"];
 
-    if ($function == "hello"){ 
-        $anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
-        abfrageTischgroesse($anzahlPersonen);
-    }
+    if($function){
 
-    elseif ($function == "belegt"){
-        $xxx = abfrageBuchungenDatumTisch($tischnummer, $datumTest);
-        foreach ($xxx as $zeile){
-            echo " ".htmlspecialchars(substr($zeile["datum"], -8, 5))." Uhr: ";
-            echo "ID ".htmlspecialchars($zeile["id_Buchung"]).PHP_EOL;            
+        if ($function == "hello"){ 
+            $anzahlPersonen = filter_input(INPUT_POST, 'anzahl', FILTER_VALIDATE_INT);
+            abfrageTischgroesse($anzahlPersonen);
         }
-    }
 
-    //kaputt?
-    elseif ($function == "belegt2"){
-        $datumTest = $_POST['datum'];
-        $xxx = abfrageBuchungenDatum($datumTest);
-        foreach ($xxx as $zeile){
-            echo "Tisch: ".htmlspecialchars($zeile["id_Tisch"]);
-            echo " - Uhrzeit: ".htmlspecialchars(substr($zeile["datum"], -8, 5));
-            echo " - ID ".htmlspecialchars($zeile["id_Buchung"])." +++++ ";     
-        }
-    }
-
-    elseif ($function == "belegt3") {
-        $datumTest = $_POST['datum'];
-        $tables = [];
-        $totalBookings = 0;
-
-        for ($i = 1; $i <= 8; $i++) {
-            $tableBookings = abfrageBuchungenDatumTisch($i, $datumTest);
-            $totalBookings += count($tableBookings);
-
-            $bookings = [];
-            foreach ($tableBookings as $zeile) {
-                $bookings[] = "Uhrzeit: " . substr($zeile["datum"], -8, 5) . " - ID: " . $zeile["id_Buchung"] . " - Personen: " . $zeile["anzahlPersonen"];
+        elseif ($function == "belegt"){
+            $tischnummer = filter_input(INPUT_POST, 'tischnummer', FILTER_VALIDATE_INT);
+            $datumTest = sanitizeInput($_POST["datum"]);
+            $xxx = abfrageBuchungenDatumTisch($tischnummer, $datumTest);
+            foreach ($xxx as $zeile){
+                echo " ".htmlspecialchars(substr($zeile["datum"], -8, 5))." Uhr: ";
+                echo "ID ".htmlspecialchars($zeile["id_Buchung"]).PHP_EOL;            
             }
-
-            $tables["table" . $i] = implode("\n", $bookings);
         }
 
-        $tables['totalBookings'] = $totalBookings;
+        elseif ($function == "belegt3") {
+            $datumTest = sanitizeInput($_POST['datum']);
+            $tables = [];
+            $totalBookings = 0;
 
-        echo json_encode($tables);
-    }
+            for ($i = 1; $i <= 8; $i++) {
+                $tableBookings = abfrageBuchungenDatumTisch($i, $datumTest);
+                $totalBookings += count($tableBookings);
 
-    elseif ($function == "update"){
-
-        $id_Buchung = mysqli_real_escape_string($GLOBALS['conn'], $_POST['idBuchung']);
-        $name = mysqli_real_escape_string($GLOBALS['conn'], $_POST['name']);
-        $uhrzeit = mysqli_real_escape_string($GLOBALS['conn'], $_POST['uhrzeit']);
-        $datum = mysqli_real_escape_string($GLOBALS['conn'], $_POST['datum']);
-        $datetime = $datum." ".$uhrzeit.":00";
-        $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
-        $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
-        $kommentar = mysqli_real_escape_string($GLOBALS['conn'], $_POST['kommentar']);
-        $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
-
-
-        if (!istDoppelteBuchungEdit($datetime, $id_Tisch, $id_Buchung) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
-            buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar); 
-            echo 'Erfolgreich aktualisiert';
-        }
-        elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
-            echo 'Tisch zu klein';
-        }
-        else{
-            echo 'Tisch zu dieser Zeit belegt';
-        }
-    }
-
-
-    elseif ($function == "delete"){
-
-        $id_Buchung = mysqli_real_escape_string($GLOBALS['conn'], $_POST['idBuchung']);
-
-        // Buchung löschen #41
-        buchungLoeschen($id_Buchung);
-
-        echo 'Reservierung wurde gelöscht';
-
-    }
-
-    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "insert"){
-        $gastName = $_POST['name'];
-        $uhrzeit = $_POST['uhrzeit'];
-        $datum = $_POST['datum'];
-        $datetime = $datum." ".$uhrzeit.":00";
-        $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
-        $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
-        $kommentar = $_POST['kommentar'];
-        $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
-
-        if (!istDoppelteBuchung($datetime, $id_Tisch) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
-            buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
-            header("Location: Test/Testcode HTML/Startseite.php?success=true");
-        }
-        elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
-            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=zuKlein&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
-        }
-
-        elseif(istDoppelteBuchung($datetime, $id_Tisch)) {
-            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=doppelt&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
-        }
-
-        else{
-            header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=ungueltig");
-        }
-
-        /* JSON test
-        $data = array(
-        'success' => false,
-        'name' => $gastName,
-        'datum' => $datum,
-        'uhrzeit' => $uhrzeit,
-        'anzahl' => $anzahlPersonen,
-        'tisch' => $id_Tisch,
-        'bearbeiter' => $id_Mitarbeiter,
-        'kommentar' => $kommentar
-        );
-        $jsonData = urlencode(json_encode($data));
-
-        header("Location: Startseite.php?data=".$jsonData);
-        */
-        
-    }
-
-    elseif ($function == "name"){
-        $id_Mitarbeiter = filter_input(INPUT_POST, 'mitarbeiterId', FILTER_VALIDATE_INT);
-        getMitarbeiternameFromId($id_Mitarbeiter);
-    }
-
-    elseif ($function == "mitarbeiterID"){
-        $name = $_POST['name'];
-        $test = getIDfromMitarbeitername($name);
-        header('Content-Type: application/json');
-        echo json_encode($test);
-    }
-
-    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["aktion"] == "login"){
-        
-        // Login-Daten #91
-        $loginBenutzername = $_POST['username'];
-        $loginPasswort = $_POST['password'];
-
-
-        if (login($loginBenutzername, $loginPasswort)){
-            $_SESSION["Angemeldet"] = true; 
-            header("Location: Test/Testcode HTML/Startseite.php");
-        }
-        else{
-            $_SESSION["Angemeldet"] = false;
-            header("Location: Test/Testcode HTML/LoginScreen.php?success=false&login=".$loginBenutzername);
-        }
-    }
-
-    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['aktion'] == 'mitarbeiter'){
-
-        $name = $_POST['name'];
-        $password = $_POST['password'];
-        $adminPW = $_POST['adminPW'];
-
-        if(login("admin", $adminPW)){
-            mitarbeiterAnlegen($name, $password);
-            header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true&user=".$name);
-            exit();
-        }
-        else{
-            header("Location: Test/Testcode HTML/mitarbeiterAnlegen.php?success=false");
-            exit();
-        }
-    }
-
-    
-    
-    elseif ($function=="dynamisch"){
-        $anzahlP = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
-        $test = pruefenTischgroesseAlle($anzahlP);
-        $uhrzeit = $_POST['uhrzeit'];
-        $datum = $_POST['datum'];
-        $datetime = $datum." ".$uhrzeit.":00";
-
-        foreach ($test as $zeile){
-            if (istDoppelteBuchung($datetime, $zeile["id_Tisch"])){
-                    echo $zeile["id_Tisch"].": belegt".PHP_EOL;
+                $bookings = [];
+                foreach ($tableBookings as $zeile) {
+                    $bookings[] = "Uhrzeit: " . substr($zeile["datum"], -8, 5) . " - ID: " . $zeile["id_Buchung"] . " - Personen: " . $zeile["anzahlPersonen"];
                 }
-            else {
-                    echo $zeile["id_Tisch"].": frei".PHP_EOL;
+
+                $tables["table" . $i] = implode("\n", $bookings);
+            }
+
+            $tables['totalBookings'] = $totalBookings;
+
+            echo json_encode($tables);
+        }
+
+        elseif ($function == "update"){
+
+            $id_Buchung = sanitizeInput($_POST['idBuchung']);
+            $name = sanitizeInput($_POST['name']);
+            $uhrzeit = sanitizeInput($_POST['uhrzeit']);
+            $datum = sanitizeInput($_POST['datum']);
+            $datetime = $datum." ".$uhrzeit.":00";
+            $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+            $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
+            $kommentar = sanitizeInput($_POST['kommentar']);
+            $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
+
+
+            if (!istDoppelteBuchungEdit($datetime, $id_Tisch, $id_Buchung) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
+                buchungBearbeiten($id_Buchung, $name, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar); 
+                echo 'Erfolgreich aktualisiert';
+            }
+            elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
+                echo 'Tisch zu klein';
+            }
+            else{
+                echo 'Tisch zu dieser Zeit belegt';
             }
         }
-    }
 
 
-    elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['aktion'] == 'settings'){
-            
-            $moVormStart = $_POST['monday-start'].":00";
-            $moVormEnd = $_POST['monday-end'].":00";
-            $moNachmStart = $_POST['monday-lunch-start'].":00";
-            $moNachmEnd = $_POST['monday-lunch-end'].":00";
+        elseif ($function == "delete"){
 
-            updateSettings(0, $moVormStart, $moVormEnd, $moNachmStart, $moNachmEnd);
+            $id_Buchung = sanitizeInput($_POST['idBuchung']);
 
-            $diVormStart = $_POST['tuesday-start'].":00";
-            $diVormEnd = $_POST['tuesday-end'].":00";
-            $diNachmStart = $_POST['tuesday-lunch-start'].":00";
-            $diNachmEnd = $_POST['tuesday-lunch-end'].":00";
+            // Buchung löschen #41
+            buchungLoeschen($id_Buchung);
 
-            updateSettings(1, $diVormStart, $diVormEnd, $diNachmStart, $diNachmEnd);
-
-            $miVormStart = $_POST['wednesday-start'].":00";
-            $miVormEnd = $_POST['wednesday-end'].":00";
-            $miNachmStart = $_POST['wednesday-lunch-start'].":00";
-            $miNachmEnd = $_POST['wednesday-lunch-end'].":00";
-
-            updateSettings(2, $miVormStart, $miVormEnd, $miNachmStart, $miNachmEnd);
-
-            $doVormStart = $_POST['thursday-start'].":00";
-            $doVormEnd = $_POST['thursday-end'].":00";
-            $doNachmStart = $_POST['thursday-lunch-start'].":00";
-            $doNachmEnd = $_POST['thursday-lunch-end'].":00";
-
-            updateSettings(3, $doVormStart, $doVormEnd, $doNachmStart, $doNachmEnd);
-
-            $frVormStart = $_POST['friday-start'].":00";
-            $frVormEnd = $_POST['friday-end'].":00";
-            $frNachmStart = $_POST['friday-lunch-start'].":00";
-            $frNachmEnd = $_POST['friday-lunch-end'].":00";
-
-            updateSettings(4, $frVormStart, $frVormEnd, $frNachmStart, $frNachmEnd);
-
-            $saVormStart = $_POST['saturday-start'].":00";
-            $saVormEnd = $_POST['saturday-end'].":00";
-            $saNachmStart = $_POST['saturday-lunch-start'].":00";
-            $saNachmEnd = $_POST['saturday-lunch-end'].":00";
-
-            updateSettings(5, $saVormStart, $saVormEnd, $saNachmStart, $saNachmEnd);
-
-            $soVormStart = $_POST['sunday-start'].":00";
-            $soVormEnd = $_POST['sunday-end'].":00";
-            $soNachmStart = $_POST['sunday-lunch-start'].":00";
-            $soNachmEnd = $_POST['sunday-lunch-end'].":00";
-
-            updateSettings(6, $soVormStart, $soVormEnd, $soNachmStart, $soNachmEnd);
-
-            header("Location: Test/Testcode HTML/Settings.php?gespeichert=true");
+            echo 'Reservierung wurde gelöscht';
 
         }
 
 
-        elseif (isset($_GET['id_Wochentag'])) {
-            
-            $id_Wochentag = intval($_GET['id_Wochentag']);
-            $data = settingsLaden($id_Wochentag);
+        elseif ($function == "name"){
+            $id_Mitarbeiter = filter_input(INPUT_POST, 'mitarbeiterId', FILTER_VALIDATE_INT);
+            getMitarbeiternameFromId($id_Mitarbeiter);
+        }
 
+
+        elseif ($function == "mitarbeiterID"){
+            $name = sanitizeInput($_POST['name']);
+            $test = getIDfromMitarbeitername($name);
             header('Content-Type: application/json');
-            echo json_encode($data);
+            echo json_encode($test);
+        }
+
+    
+        elseif ($function=="dynamisch"){
+            $anzahlP = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+            $test = pruefenTischgroesseAlle($anzahlP);
+            $uhrzeit = sanitizeInput($_POST['uhrzeit']);
+            $datum = sanitizeInput($_POST['datum']);
+            $datetime = $datum." ".$uhrzeit.":00";
+
+            foreach ($test as $zeile){
+                if (istDoppelteBuchung($datetime, $zeile["id_Tisch"])){
+                        echo $zeile["id_Tisch"].": belegt".PHP_EOL;
+                    }
+                else {
+                        echo $zeile["id_Tisch"].": frei".PHP_EOL;
+                }
+            }
         }
 
 
         elseif ($function=="settingsLaden"){
-            $day = $_POST['day'];
-            /*
-            $timeID= $_POST['timeID'];
-
-             $hilfe="vormStart";
-            if ($timeID == 2){
-                $hilfe="vormEnde";
-            }
-            elseif ($timeID == 3){
-                $hilfe="nachmStart";
-            }
-            elseif ($timeID == 4){
-                $hilfe="nachmEnde";
-            }
-            */
+            $day = sanitizeInput($_POST['day']);
 
             $data = settingsLadenEinzeln($day);
 
@@ -307,5 +143,157 @@
             header('Content-Type: application/json');
             echo json_encode($response);
         }
+        
+    }
 
+    // POST-Requests
+
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        if ($_POST["aktion"] == "insert"){
+            $gastName = sanitizeInput($_POST['name']);
+            $uhrzeit = sanitizeInput($_POST['uhrzeit']);
+            $datum = sanitizeInput($_POST['datum']);
+            $datetime = $datum." ".$uhrzeit.":00";
+            $anzahlPersonen = filter_input(INPUT_POST, 'personen', FILTER_VALIDATE_INT);
+            $id_Tisch = filter_input(INPUT_POST, 'tisch', FILTER_VALIDATE_INT);
+            $kommentar = sanitizeInput($_POST['kommentar']);
+            $id_Mitarbeiter = filter_input(INPUT_POST, 'bearbeiter', FILTER_VALIDATE_INT);
+
+            if (!istDoppelteBuchung($datetime, $id_Tisch) && pruefenTischgroesse($anzahlPersonen, $id_Tisch)){
+                buchungEinfuegen($gastName, $datetime, $anzahlPersonen, $id_Tisch, $id_Mitarbeiter, $kommentar);
+                header("Location: Test/Testcode HTML/Startseite.php?success=true");
+            }
+            elseif(!pruefenTischgroesse($anzahlPersonen, $id_Tisch)) {
+                header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=zuKlein&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+            }
+
+            elseif(istDoppelteBuchung($datetime, $id_Tisch)) {
+                header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=doppelt&name=".$gastName."&datum=".$datum."&uhrzeit=".$uhrzeit."&anzahl=".$anzahlPersonen."&tisch=".$id_Tisch."&bearbeiter=".$id_Mitarbeiter."&kommentar=".$kommentar);
+            }
+
+            else{
+                header("Location: Test/Testcode HTML/Startseite.php?success=false&fehler=ungueltig");
+            }
+        }
+
+
+        elseif ($_POST["aktion"] == "login"){
+        
+            // Login-Daten #91
+            $loginBenutzername = sanitizeInput($_POST['username']);
+            $loginPasswort = sanitizeInput($_POST['password']);
+
+
+            if (login($loginBenutzername, $loginPasswort)){
+                $_SESSION["Angemeldet"] = true; 
+                $_SESSION["username"] = $loginBenutzername;
+                header("Location: Test/Testcode HTML/Startseite.php");
+            }
+            else{
+                $_SESSION["Angemeldet"] = false;
+                header("Location: Test/Testcode HTML/LoginScreen.php?success=false&login=".$loginBenutzername);
+            }
+        }
+
+
+        elseif (isset($_POST['logout'])) {
+            // Invalidate session
+            session_unset();
+            session_destroy();
+
+            // Clear cookies
+            setcookie('PHPSESSID', '', time() - 3600, '/');
+
+            // Redirect to login page
+            header('Location: Test/Testcode HTML/LoginScreen.php?logout=true');
+            exit();
+        }
+
+
+        elseif ($_POST['aktion'] == 'mitarbeiter'){
+
+            $name = sanitizeInput($_POST['name']);
+            $password = sanitizeInput($_POST['password']);
+            $adminPW = sanitizeInput($_POST['adminPW']);
+
+            if(login("admin", $adminPW)){
+                mitarbeiterAnlegen($name, $password);
+                header("Location: Test/Testcode HTML/LoginScreen.php?erstellt=true&user=".$name);
+                exit();
+            }
+            else{
+                header("Location: Test/Testcode HTML/mitarbeiterAnlegen.php?success=false");
+                exit();
+            }
+        }
+
+
+        elseif ($_POST['aktion'] == 'settings'){
+            
+            $moVormStart = sanitizeInput($_POST['monday-start']).":00";
+            $moVormEnd = sanitizeInput($_POST['monday-end']).":00";
+            $moNachmStart = sanitizeInput($_POST['monday-lunch-start']).":00";
+            $moNachmEnd = sanitizeInput($_POST['monday-lunch-end']).":00";
+
+            updateSettings(0, $moVormStart, $moVormEnd, $moNachmStart, $moNachmEnd);
+
+            $diVormStart = sanitizeInput($_POST['tuesday-start']).":00";
+            $diVormEnd = sanitizeInput($_POST['tuesday-end']).":00";
+            $diNachmStart = sanitizeInput($_POST['tuesday-lunch-start']).":00";
+            $diNachmEnd = $_POST['tuesday-lunch-end'].":00";
+
+            updateSettings(1, $diVormStart, $diVormEnd, $diNachmStart, $diNachmEnd);
+
+            $miVormStart = sanitizeInput($_POST['wednesday-start']).":00";
+            $miVormEnd = sanitizeInput($_POST['wednesday-end']).":00";
+            $miNachmStart = sanitizeInput($_POST['wednesday-lunch-start']).":00";
+            $miNachmEnd = sanitizeInput($_POST['wednesday-lunch-end']).":00";
+
+            updateSettings(2, $miVormStart, $miVormEnd, $miNachmStart, $miNachmEnd);
+
+            $doVormStart = sanitizeInput($_POST['thursday-start']).":00";
+            $doVormEnd = sanitizeInput($_POST['thursday-end']).":00";
+            $doNachmStart = sanitizeInput($_POST['thursday-lunch-start']).":00";
+            $doNachmEnd = sanitizeInput($_POST['thursday-lunch-end']).":00";
+
+            updateSettings(3, $doVormStart, $doVormEnd, $doNachmStart, $doNachmEnd);
+
+            $frVormStart = sanitizeInput($_POST['friday-start']).":00";
+            $frVormEnd = sanitizeInput($_POST['friday-end']).":00";
+            $frNachmStart = sanitizeInput($_POST['friday-lunch-start']).":00";
+            $frNachmEnd = sanitizeInput($_POST['friday-lunch-end']).":00";
+
+            updateSettings(4, $frVormStart, $frVormEnd, $frNachmStart, $frNachmEnd);
+
+            $saVormStart = sanitizeInput($_POST['saturday-start']).":00";
+            $saVormEnd = sanitizeInput($_POST['saturday-end']).":00";
+            $saNachmStart = sanitizeInput($_POST['saturday-lunch-start']).":00";
+            $saNachmEnd = sanitizeInput($_POST['saturday-lunch-end']).":00";
+
+            updateSettings(5, $saVormStart, $saVormEnd, $saNachmStart, $saNachmEnd);
+
+            $soVormStart = sanitizeInput($_POST['sunday-start']).":00";
+            $soVormEnd = sanitizeInput($_POST['sunday-end']).":00";
+            $soNachmStart = sanitizeInput($_POST['sunday-lunch-start']).":00";
+            $soNachmEnd = sanitizeInput($_POST['sunday-lunch-end']).":00";
+
+            updateSettings(6, $soVormStart, $soVormEnd, $soNachmStart, $soNachmEnd);
+
+            header("Location: Test/Testcode HTML/Settings.php?gespeichert=true");
+
+        }
+
+    }
+
+    // GET-Requests
+
+    elseif (isset($_GET['id_Wochentag'])) {
+            
+            $id_Wochentag = intval(sanitizeInput($_GET['id_Wochentag']));
+            $data = settingsLaden($id_Wochentag);
+
+            header('Content-Type: application/json');
+            echo json_encode($data);
+    }
 ?>
