@@ -50,9 +50,41 @@ Datenbank: Zur Speicherung der Daten wird eine MySQL-Datenbank über My.php genu
 Der Quellcode des Systems ist an wichtigen Stellen ausführlich kommentiert, um die Wartbarkeit und Weiterentwicklung zu erleichtern. 
 Die Kommentare erklären spezifische Funktionen, komplexe Algorithmen, Datenbankabfragen und Schnittstellen zwischen Frontend und Backend.
 
-6. Testanleitung (fehlt noch)
-Eine detaillierte Anleitung zum Testen des Systems wird bereitgestellt. Sie umfasst die Einrichtung einer Testumgebung, 
-die Erstellung von Testdaten und die Durchführung von Tests, um sicherzustellen, dass das System stabil und fehlerfrei läuft.
+6. Testanleitung
+Eine detaillierte Anleitung zum Testen des Systems wird bereitgestellt. Sie umfasst die Methoden und Vorgehensweisen, für die die
+Durchführung von Tests, um sicherzustellen, dass das System stabil und fehlerfrei läuft.
+
+Erstellung von Testdaten
+Um sicherzustellen, dass das System unter realistischen Bedingungen getestet wird, wurden folgende Testdaten erstellt:
+
+Reservierungsdaten: Verschiedene Reservierungsfälle, einschließlich normaler Reservierungen, Doppelbuchungen, Stornierungen und Änderungen.
+Benutzerdaten: Testprofile für alle Benutzerrollen, um die Zugriffsrechte und Funktionalitäten entsprechend zu überprüfen.
+Öffnungszeiten: Testdaten für normale Öffnungszeiten 
+
+Funktionale Tests
+Diese Tests stellen sicher, dass die grundlegenden Funktionen der Anwendung korrekt arbeiten.
+
+Anmeldung und Registrierung: Überprüfung der Benutzeranmeldung und -registrierung einschließlich Fehlerbehandlung bei falschen Eingaben.
+Reservierungserstellung: Testen der Erstellung von Reservierungen, einschließlich der Validierung von Eingabedaten.
+Reservierungsverwaltung: Bearbeiten, Anzeigen und Löschen von Reservierungen durch autorisierte Benutzer.
+Kalenderfunktion: Überprüfung der Navigationsleiste und der Kalenderfunktion zur Auswahl und Anzeige von Reservierungen an verschiedenen Tagen.
+
+Usability-Tests
+Diese Tests zielen darauf ab, die Benutzerfreundlichkeit und Effizienz der Anwendung zu bewerten.
+
+Benutzeroberfläche: Bewertung der Benutzeroberfläche hinsichtlich Übersichtlichkeit und intuitiver Bedienung.
+Fehler- und Erfolgsmeldungen: Überprüfung, ob Fehlermeldungen verständlich und hilfreich sind und ob Erfolgsmeldungen bei korrekten Aktionen angezeigt werden.
+
+Ergebnisdokumentation
+Die Testergebnisse wurden in einem detaillierten Bericht dokumentiert, der folgende Informationen enthält:
+
+Beschreibung der Testfälle: Beschreibung jedes Testfalls und der tatsächlichen Ergebnisse.
+Fehlerberichte: Detaillierte Beschreibung der gefundenen Fehler
+Empfehlungen: Vorschläge zur Behebung der gefundenen Fehler und zur Verbesserung.
+
+Korrekturmaßnahmen und Retests
+Nach der Fehlerbehebung durch das Entwicklerteam wurden Retests durchgeführt, um sicherzustellen, dass die Korrekturen erfolgreich waren
+und keine neuen Fehler eingeführt wurden.
 
 7. Wartung und Beitrag (fehlt noch)
 Informationen zur Wartung des Systems, zur Versionskontrolle sowie zur Beitragserstellung und -verwaltung für Entwickler werden noch hinzugefügt.
