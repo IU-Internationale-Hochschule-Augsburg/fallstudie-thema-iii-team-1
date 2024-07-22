@@ -1,3 +1,3 @@
-In Github nur Konzeptdateien
+Backend-Dateien und Frontend-Dateien, die Backend-Code beinhalten
 
-Funktionierende, angepasste Dateien sind im Filesystem der Website
+Relevanter Ordner: Aktuell
